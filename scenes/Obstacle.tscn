@@ -1,0 +1,52 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/ObstacleController.cs" id="1_obstacle"]
+[ext_resource type="Script" path="res://scripts/WoodBoard.cs" id="2_wood"]
+[ext_resource type="Script" path="res://scripts/StoneBoard.cs" id="3_stone"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wood"]
+size = Vector2(96, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_stone"]
+size = Vector2(96, 28)
+
+[node name="Obstacle" type="Node2D"]
+script = ExtResource("1_obstacle")
+
+[node name="Wood" type="StaticBody2D" parent="."]
+script = ExtResource("2_wood")
+BreakSpeedThreshold = 140.0
+
+[node name="Collision" type="CollisionShape2D" parent="Wood"]
+shape = SubResource("RectangleShape2D_wood")
+
+[node name="Sprite" type="Sprite2D" parent="Wood"]
+
+[node name="HitArea" type="Area2D" parent="Wood"]
+collision_layer = 0
+collision_mask = 2
+monitoring = true
+
+[node name="HitShape" type="CollisionShape2D" parent="Wood/HitArea"]
+shape = SubResource("RectangleShape2D_wood")
+
+[node name="Stone" type="StaticBody2D" parent="."]
+visible = false
+script = ExtResource("3_stone")
+BreakSpeedThreshold = 380.0
+
+[node name="Collision" type="CollisionShape2D" parent="Stone"]
+shape = SubResource("RectangleShape2D_stone")
+disabled = true
+
+[node name="Sprite" type="Sprite2D" parent="Stone"]
+
+[node name="HitArea" type="Area2D" parent="Stone"]
+collision_layer = 0
+collision_mask = 2
+monitoring = false
+
+[node name="HitShape" type="CollisionShape2D" parent="Stone/HitArea"]
+shape = SubResource("RectangleShape2D_stone")
+
+[node name="ActiveType" type="Node" parent="."]

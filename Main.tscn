@@ -1,0 +1,112 @@
+[gd_scene load_steps=15 format=3]
+
+[ext_resource type="Script" path="res://scripts/MainController.cs" id="1_main"]
+[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="3_enemy"]
+[ext_resource type="PackedScene" path="res://scenes/Obstacle.tscn" id="4_obstacle"]
+[ext_resource type="PackedScene" path="res://scenes/Boss.tscn" id="5_boss"]
+[ext_resource type="PackedScene" path="res://ui/HUD.tscn" id="6_hud"]
+[ext_resource type="Script" path="res://scripts/MapResetManager.cs" id="7_reset"]
+[ext_resource type="Script" path="res://scripts/RoundSettlementController.cs" id="8_round"]
+[ext_resource type="Script" path="res://scripts/SpawnManager.cs" id="9_spawn"]
+[ext_resource type="Script" path="res://scripts/EnergyManager.cs" id="10_energy"]
+[ext_resource type="Script" path="res://scripts/CardManager.cs" id="11_card"]
+[ext_resource type="Script" path="res://scripts/BossManager.cs" id="12_bossmgr"]
+[ext_resource type="Script" path="res://scripts/GameManager.cs" id="13_game"]
+[ext_resource type="Script" path="res://scripts/FeedbackManager.cs" id="14_feedback"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_main")
+
+[node name="World" type="Node2D" parent="."]
+
+[node name="LevelGeo" type="Node2D" parent="World"]
+
+[node name="SpawnPoints" type="Node2D" parent="World"]
+
+[node name="PlayerSpawn" type="Marker2D" parent="World/SpawnPoints"]
+position = Vector2(160, 360)
+
+[node name="EnemySpawns" type="Node2D" parent="World/SpawnPoints"]
+
+[node name="EnemySpawnA" type="Marker2D" parent="World/SpawnPoints/EnemySpawns"]
+position = Vector2(640, 320)
+
+[node name="EnemySpawnB" type="Marker2D" parent="World/SpawnPoints/EnemySpawns"]
+position = Vector2(920, 320)
+
+[node name="ObstacleSpawns" type="Node2D" parent="World/SpawnPoints"]
+
+[node name="ObstacleSpawnA" type="Marker2D" parent="World/SpawnPoints/ObstacleSpawns"]
+position = Vector2(500, 390)
+
+[node name="ObstacleSpawnB" type="Marker2D" parent="World/SpawnPoints/ObstacleSpawns"]
+position = Vector2(760, 390)
+
+[node name="BossSpawn" type="Marker2D" parent="World/SpawnPoints"]
+position = Vector2(1360, 300)
+
+[node name="Runtime" type="Node2D" parent="."]
+
+[node name="PlayerInstance" parent="Runtime" instance=ExtResource("2_player")]
+position = Vector2(160, 360)
+
+[node name="Enemies" type="Node2D" parent="Runtime"]
+
+[node name="EnemyA" parent="Runtime/Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(640, 320)
+
+[node name="EnemyB" parent="Runtime/Enemies" instance=ExtResource("3_enemy")]
+position = Vector2(920, 320)
+
+[node name="Obstacles" type="Node2D" parent="Runtime"]
+
+[node name="WoodObstacle" parent="Runtime/Obstacles" instance=ExtResource("4_obstacle")]
+position = Vector2(500, 390)
+
+[node name="StoneObstacle" parent="Runtime/Obstacles" instance=ExtResource("4_obstacle")]
+position = Vector2(760, 390)
+ActiveKind = 1
+
+[node name="BossInstance" parent="Runtime" instance=ExtResource("5_boss")]
+position = Vector2(1360, 300)
+
+[node name="Drops" type="Node2D" parent="Runtime"]
+
+[node name="Systems" type="Node" parent="."]
+
+[node name="MapResetController" type="Node" parent="Systems"]
+script = ExtResource("7_reset")
+
+[node name="RoundSettlementController" type="Node" parent="Systems"]
+script = ExtResource("8_round")
+
+[node name="SpawnRegistry" type="Node" parent="Systems"]
+script = ExtResource("9_spawn")
+EnemyScene = ExtResource("3_enemy")
+ObstacleScene = ExtResource("4_obstacle")
+
+[node name="EnergyManager" type="Node" parent="Systems"]
+script = ExtResource("10_energy")
+
+[node name="CardManager" type="Node" parent="Systems"]
+script = ExtResource("11_card")
+
+[node name="BossManager" type="Node" parent="Systems"]
+script = ExtResource("12_bossmgr")
+
+[node name="GameManager" type="Node" parent="Systems"]
+script = ExtResource("13_game")
+
+[node name="FeedbackManager" type="Node" parent="Systems"]
+script = ExtResource("14_feedback")
+
+[node name="CameraRig" type="Node2D" parent="."]
+
+[node name="Camera2D" type="Camera2D" parent="CameraRig"]
+position = Vector2(640, 360)
+current = true
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="UI" instance=ExtResource("6_hud")]

@@ -1,0 +1,39 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/BossController.cs" id="1_boss"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(92, 92)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(98, 98)
+
+[node name="Boss" type="CharacterBody2D"]
+script = ExtResource("1_boss")
+
+[node name="Collision" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Visual" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite2D" parent="Visual"]
+
+[node name="Hurtbox" type="Area2D" parent="."]
+
+[node name="HurtboxShape" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="AttackAnchor" type="Marker2D" parent="."]
+
+[node name="PhaseAnchors" type="Node" parent="."]
+
+[node name="Phase75" type="Marker2D" parent="PhaseAnchors"]
+
+[node name="Phase50" type="Marker2D" parent="PhaseAnchors"]
+
+[node name="Phase25" type="Marker2D" parent="PhaseAnchors"]
+
+[node name="ResetTriggerAnchor" type="Node" parent="."]
+
+[node name="DropAnchor" type="Marker2D" parent="."]
+position = Vector2(0, -48)

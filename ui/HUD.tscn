@@ -1,0 +1,154 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/HUD.cs" id="1_hud"]
+[ext_resource type="Script" path="res://scripts/EnergyBarUI.cs" id="2_energyui"]
+[ext_resource type="Script" path="res://scripts/CardDisplayUI.cs" id="3_cardui"]
+[ext_resource type="Script" path="res://scripts/BossHpBarUI.cs" id="4_bossui"]
+[ext_resource type="Script" path="res://scripts/PhaseHintUI.cs" id="5_phaseui"]
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_hud")
+
+[node name="TopBar" type="HBoxContainer" parent="."]
+layout_mode = 2
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 1264.0
+offset_bottom = 124.0
+theme_override_constants/separation = 24
+
+[node name="EnergyPanel" type="VBoxContainer" parent="TopBar"]
+script = ExtResource("2_energyui")
+
+[node name="EnergyLabel" type="Label" parent="TopBar/EnergyPanel"]
+text = "Energy"
+
+[node name="EnergyBar" type="TextureProgressBar" parent="TopBar/EnergyPanel"]
+custom_minimum_size = Vector2(220, 24)
+max_value = 100.0
+value = 100.0
+
+[node name="DeckPanel" type="VBoxContainer" parent="TopBar"]
+script = ExtResource("3_cardui")
+
+[node name="DeckLabel" type="Label" parent="TopBar/DeckPanel"]
+text = "Deck"
+
+[node name="DeckCount" type="Label" parent="TopBar/DeckPanel"]
+text = "0"
+
+[node name="CardSlots" type="HBoxContainer" parent="TopBar/DeckPanel"]
+theme_override_constants/separation = 6
+
+[node name="Slot0" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots"]
+custom_minimum_size = Vector2(54, 72)
+
+[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot0"]
+layout_mode = 2
+text = "--"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot1" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots"]
+custom_minimum_size = Vector2(54, 72)
+
+[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot1"]
+layout_mode = 2
+text = "--"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot2" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots"]
+custom_minimum_size = Vector2(54, 72)
+
+[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot2"]
+layout_mode = 2
+text = "--"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot3" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots"]
+custom_minimum_size = Vector2(54, 72)
+
+[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot3"]
+layout_mode = 2
+text = "--"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Slot4" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots"]
+custom_minimum_size = Vector2(54, 72)
+
+[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot4"]
+layout_mode = 2
+text = "--"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BossBarPanel" type="VBoxContainer" parent="TopBar"]
+script = ExtResource("4_bossui")
+
+[node name="BossName" type="Label" parent="TopBar/BossBarPanel"]
+text = "Boss"
+
+[node name="BossHpBar" type="TextureProgressBar" parent="TopBar/BossBarPanel"]
+custom_minimum_size = Vector2(360, 24)
+max_value = 100.0
+value = 100.0
+
+[node name="PhaseBanner" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -40.0
+offset_right = 200.0
+offset_bottom = 40.0
+script = ExtResource("5_phaseui")
+
+[node name="PhaseText" type="Label" parent="PhaseBanner"]
+text = "PHASE 1"
+horizontal_alignment = 1
+
+[node name="SettlementPanel" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -220.0
+offset_top = 80.0
+offset_right = 220.0
+offset_bottom = 160.0
+
+[node name="SettlementText" type="Label" parent="SettlementPanel"]
+text = "Settlement"
+horizontal_alignment = 1
+
+[node name="ResultPanel" type="CenterContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -10.0
+offset_right = 260.0
+offset_bottom = 44.0
+
+[node name="ResultText" type="Label" parent="ResultPanel"]
+text = "Result"
+horizontal_alignment = 1
