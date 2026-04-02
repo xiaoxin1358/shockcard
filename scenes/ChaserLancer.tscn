@@ -465,6 +465,7 @@ autoplay = "run"
 [node name="AnimatedSprite2D_Archer" type="AnimatedSprite2D" parent="." unique_id=807036097]
 visible = false
 position = Vector2(0, -8)
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_lancer")
 animation = &"run"
 

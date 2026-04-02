@@ -1,6 +1,6 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene format=3 uid="uid://b4kx4l624rovf"]
 
-[ext_resource type="Script" path="res://scripts/BossController.cs" id="1_boss"]
+[ext_resource type="Script" uid="uid://undu5dvtf8y6" path="res://scripts/BossController.cs" id="1_boss"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(92, 92)
@@ -8,34 +8,36 @@ size = Vector2(92, 92)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
 size = Vector2(98, 98)
 
-[node name="Boss" type="CharacterBody2D"]
+[node name="Boss" type="CharacterBody2D" unique_id=524111602]
 script = ExtResource("1_boss")
+MaxHp = 600.0
+StartHp = 600.0
 
-[node name="Collision" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=1640189764]
 shape = SubResource("RectangleShape2D_body")
 
-[node name="Visual" type="Node2D" parent="."]
+[node name="Visual" type="Node2D" parent="." unique_id=60259072]
 
-[node name="Sprite" type="Polygon2D" parent="Visual"]
-polygon = PackedVector2Array(-46, -46, 46, -46, 46, 46, -46, 46)
+[node name="Sprite" type="Polygon2D" parent="Visual" unique_id=143054516]
 color = Color(0.9, 0.2, 0.2, 1)
+polygon = PackedVector2Array(-46, -46, 46, -46, 46, 46, -46, 46)
 
-[node name="Hurtbox" type="Area2D" parent="."]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=983470165]
 
-[node name="HurtboxShape" type="CollisionShape2D" parent="Hurtbox"]
+[node name="HurtboxShape" type="CollisionShape2D" parent="Hurtbox" unique_id=371314915]
 shape = SubResource("RectangleShape2D_hurtbox")
 
-[node name="AttackAnchor" type="Marker2D" parent="."]
+[node name="AttackAnchor" type="Marker2D" parent="." unique_id=1686550945]
 
-[node name="PhaseAnchors" type="Node" parent="."]
+[node name="PhaseAnchors" type="Node" parent="." unique_id=1637585200]
 
-[node name="Phase75" type="Marker2D" parent="PhaseAnchors"]
+[node name="Phase75" type="Marker2D" parent="PhaseAnchors" unique_id=977436079]
 
-[node name="Phase50" type="Marker2D" parent="PhaseAnchors"]
+[node name="Phase50" type="Marker2D" parent="PhaseAnchors" unique_id=1538091842]
 
-[node name="Phase25" type="Marker2D" parent="PhaseAnchors"]
+[node name="Phase25" type="Marker2D" parent="PhaseAnchors" unique_id=1261281151]
 
-[node name="ResetTriggerAnchor" type="Node" parent="."]
+[node name="ResetTriggerAnchor" type="Node" parent="." unique_id=951189367]
 
-[node name="DropAnchor" type="Marker2D" parent="."]
+[node name="DropAnchor" type="Marker2D" parent="." unique_id=1702574126]
 position = Vector2(0, -48)

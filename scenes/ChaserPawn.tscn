@@ -1,115 +1,149 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://b8amf113a5rqy"]
 
 [ext_resource type="Script" uid="uid://c8841dvaf6p4g" path="res://scripts/ChaserEnemy.cs" id="1_chaser"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Archer/Archer_Idle.png" id="archer_1_idle"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Archer/Archer_Run.png" id="archer_2_run"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Archer/Archer_Shoot.png" id="archer_3_shoot"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_Idle.png" id="lancer_1_idle"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_Run.png" id="lancer_2_run"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_Right_Attack.png" id="lancer_3_attack_right"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_Up_Attack.png" id="lancer_4_attack_up"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_Down_Attack.png" id="lancer_5_attack_down"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_UpRight_Attack.png" id="lancer_6_attack_up_right"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_DownRight_Attack.png" id="lancer_7_attack_down_right"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Pawn/Pawn_Idle.png" id="pawn_1_idle"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Pawn/Pawn_Run.png" id="pawn_2_run"]
-[ext_resource type="Texture2D" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Pawn/Pawn_Interact Axe.png" id="pawn_3_attack"]
+[ext_resource type="Texture2D" uid="uid://choxecrrmis77" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_Idle.png" id="lancer_1_idle"]
+[ext_resource type="Texture2D" uid="uid://tcfg41oy070y" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_Run.png" id="lancer_2_run"]
+[ext_resource type="Texture2D" uid="uid://dkqyvio2otegc" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_Right_Attack.png" id="lancer_3_attack_right"]
+[ext_resource type="Texture2D" uid="uid://cfi33gqlkf4pe" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_Up_Attack.png" id="lancer_4_attack_up"]
+[ext_resource type="Texture2D" uid="uid://cthbw1mui1bim" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_Down_Attack.png" id="lancer_5_attack_down"]
+[ext_resource type="Texture2D" uid="uid://s2vq1rw3xf5g" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_UpRight_Attack.png" id="lancer_6_attack_up_right"]
+[ext_resource type="Texture2D" uid="uid://d3oblqs117uja" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Lancer/Lancer_DownRight_Attack.png" id="lancer_7_attack_down_right"]
+[ext_resource type="Texture2D" uid="uid://dwrgos80oor72" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Pawn/Pawn_Idle.png" id="pawn_1_idle"]
+[ext_resource type="Texture2D" uid="uid://pn0cyulbldkp" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Pawn/Pawn_Run.png" id="pawn_2_run"]
+[ext_resource type="Texture2D" uid="uid://cguq73iwxnmso" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Red Units/Pawn/Pawn_Interact Axe.png" id="pawn_3_attack"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(40, 40)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_idle0"]
-atlas = ExtResource("archer_1_idle")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack0"]
+atlas = ExtResource("pawn_3_attack")
 region = Rect2(0, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_idle1"]
-atlas = ExtResource("archer_1_idle")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack1"]
+atlas = ExtResource("pawn_3_attack")
 region = Rect2(192, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_idle2"]
-atlas = ExtResource("archer_1_idle")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack2"]
+atlas = ExtResource("pawn_3_attack")
 region = Rect2(384, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_idle3"]
-atlas = ExtResource("archer_1_idle")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack3"]
+atlas = ExtResource("pawn_3_attack")
 region = Rect2(576, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_idle4"]
-atlas = ExtResource("archer_1_idle")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack4"]
+atlas = ExtResource("pawn_3_attack")
 region = Rect2(768, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_idle5"]
-atlas = ExtResource("archer_1_idle")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack5"]
+atlas = ExtResource("pawn_3_attack")
 region = Rect2(960, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_run0"]
-atlas = ExtResource("archer_2_run")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle0"]
+atlas = ExtResource("pawn_1_idle")
 region = Rect2(0, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_run1"]
-atlas = ExtResource("archer_2_run")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle1"]
+atlas = ExtResource("pawn_1_idle")
 region = Rect2(192, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_run2"]
-atlas = ExtResource("archer_2_run")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle2"]
+atlas = ExtResource("pawn_1_idle")
 region = Rect2(384, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_run3"]
-atlas = ExtResource("archer_2_run")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle3"]
+atlas = ExtResource("pawn_1_idle")
 region = Rect2(576, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_attack0"]
-atlas = ExtResource("archer_3_shoot")
-region = Rect2(0, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_attack1"]
-atlas = ExtResource("archer_3_shoot")
-region = Rect2(192, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_attack2"]
-atlas = ExtResource("archer_3_shoot")
-region = Rect2(384, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_attack3"]
-atlas = ExtResource("archer_3_shoot")
-region = Rect2(576, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_attack4"]
-atlas = ExtResource("archer_3_shoot")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle4"]
+atlas = ExtResource("pawn_1_idle")
 region = Rect2(768, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_attack5"]
-atlas = ExtResource("archer_3_shoot")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle5"]
+atlas = ExtResource("pawn_1_idle")
 region = Rect2(960, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_attack6"]
-atlas = ExtResource("archer_3_shoot")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle6"]
+atlas = ExtResource("pawn_1_idle")
 region = Rect2(1152, 0, 192, 192)
 
-[sub_resource type="AtlasTexture" id="archer_AtlasTexture_attack7"]
-atlas = ExtResource("archer_3_shoot")
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle7"]
+atlas = ExtResource("pawn_1_idle")
 region = Rect2(1344, 0, 192, 192)
 
-[sub_resource type="SpriteFrames" id="SpriteFrames_archer"]
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run0"]
+atlas = ExtResource("pawn_2_run")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run1"]
+atlas = ExtResource("pawn_2_run")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run2"]
+atlas = ExtResource("pawn_2_run")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run3"]
+atlas = ExtResource("pawn_2_run")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run4"]
+atlas = ExtResource("pawn_2_run")
+region = Rect2(768, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run5"]
+atlas = ExtResource("pawn_2_run")
+region = Rect2(960, 0, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_pawn"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_idle0")
+"texture": SubResource("pawn_AtlasTexture_attack0")
 }, {
 "duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_idle1")
+"texture": SubResource("pawn_AtlasTexture_attack1")
 }, {
 "duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_idle2")
+"texture": SubResource("pawn_AtlasTexture_attack2")
 }, {
 "duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_idle3")
+"texture": SubResource("pawn_AtlasTexture_attack3")
 }, {
 "duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_idle4")
+"texture": SubResource("pawn_AtlasTexture_attack4")
 }, {
 "duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_idle5")
+"texture": SubResource("pawn_AtlasTexture_attack5")
+}],
+"loop": false,
+"name": &"attack",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("pawn_AtlasTexture_idle0")
+}, {
+"duration": 1.0,
+"texture": SubResource("pawn_AtlasTexture_idle1")
+}, {
+"duration": 1.0,
+"texture": SubResource("pawn_AtlasTexture_idle2")
+}, {
+"duration": 1.0,
+"texture": SubResource("pawn_AtlasTexture_idle3")
+}, {
+"duration": 1.0,
+"texture": SubResource("pawn_AtlasTexture_idle4")
+}, {
+"duration": 1.0,
+"texture": SubResource("pawn_AtlasTexture_idle5")
+}, {
+"duration": 1.0,
+"texture": SubResource("pawn_AtlasTexture_idle6")
+}, {
+"duration": 1.0,
+"texture": SubResource("pawn_AtlasTexture_idle7")
 }],
 "loop": true,
 "name": &"idle",
@@ -117,50 +151,87 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_run0")
+"texture": SubResource("pawn_AtlasTexture_run0")
 }, {
 "duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_run1")
+"texture": SubResource("pawn_AtlasTexture_run1")
 }, {
 "duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_run2")
+"texture": SubResource("pawn_AtlasTexture_run2")
 }, {
 "duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_run3")
+"texture": SubResource("pawn_AtlasTexture_run3")
+}, {
+"duration": 1.0,
+"texture": SubResource("pawn_AtlasTexture_run4")
+}, {
+"duration": 1.0,
+"texture": SubResource("pawn_AtlasTexture_run5")
 }],
 "loop": true,
 "name": &"run",
 "speed": 12.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_attack0")
-}, {
-"duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_attack1")
-}, {
-"duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_attack2")
-}, {
-"duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_attack3")
-}, {
-"duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_attack4")
-}, {
-"duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_attack5")
-}, {
-"duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_attack6")
-}, {
-"duration": 1.0,
-"texture": SubResource("archer_AtlasTexture_attack7")
-}],
-"loop": false,
-"name": &"attack",
-"speed": 14.0
 }]
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down0"]
+atlas = ExtResource("lancer_5_attack_down")
+region = Rect2(0, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down1"]
+atlas = ExtResource("lancer_5_attack_down")
+region = Rect2(320, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down2"]
+atlas = ExtResource("lancer_5_attack_down")
+region = Rect2(640, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down_right0"]
+atlas = ExtResource("lancer_7_attack_down_right")
+region = Rect2(0, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down_right1"]
+atlas = ExtResource("lancer_7_attack_down_right")
+region = Rect2(320, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down_right2"]
+atlas = ExtResource("lancer_7_attack_down_right")
+region = Rect2(640, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_right0"]
+atlas = ExtResource("lancer_3_attack_right")
+region = Rect2(0, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_right1"]
+atlas = ExtResource("lancer_3_attack_right")
+region = Rect2(320, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_right2"]
+atlas = ExtResource("lancer_3_attack_right")
+region = Rect2(640, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up0"]
+atlas = ExtResource("lancer_4_attack_up")
+region = Rect2(0, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up1"]
+atlas = ExtResource("lancer_4_attack_up")
+region = Rect2(320, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up2"]
+atlas = ExtResource("lancer_4_attack_up")
+region = Rect2(640, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up_right0"]
+atlas = ExtResource("lancer_6_attack_up_right")
+region = Rect2(0, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up_right1"]
+atlas = ExtResource("lancer_6_attack_up_right")
+region = Rect2(320, 0, 320, 320)
+
+[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up_right2"]
+atlas = ExtResource("lancer_6_attack_up_right")
+region = Rect2(640, 0, 320, 320)
 
 [sub_resource type="AtlasTexture" id="lancer_AtlasTexture_idle0"]
 atlas = ExtResource("lancer_1_idle")
@@ -234,68 +305,78 @@ region = Rect2(1280, 0, 320, 320)
 atlas = ExtResource("lancer_2_run")
 region = Rect2(1600, 0, 320, 320)
 
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_right0"]
-atlas = ExtResource("lancer_3_attack_right")
-region = Rect2(0, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_right1"]
-atlas = ExtResource("lancer_3_attack_right")
-region = Rect2(320, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_right2"]
-atlas = ExtResource("lancer_3_attack_right")
-region = Rect2(640, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up0"]
-atlas = ExtResource("lancer_4_attack_up")
-region = Rect2(0, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up1"]
-atlas = ExtResource("lancer_4_attack_up")
-region = Rect2(320, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up2"]
-atlas = ExtResource("lancer_4_attack_up")
-region = Rect2(640, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down0"]
-atlas = ExtResource("lancer_5_attack_down")
-region = Rect2(0, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down1"]
-atlas = ExtResource("lancer_5_attack_down")
-region = Rect2(320, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down2"]
-atlas = ExtResource("lancer_5_attack_down")
-region = Rect2(640, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up_right0"]
-atlas = ExtResource("lancer_6_attack_up_right")
-region = Rect2(0, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up_right1"]
-atlas = ExtResource("lancer_6_attack_up_right")
-region = Rect2(320, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_up_right2"]
-atlas = ExtResource("lancer_6_attack_up_right")
-region = Rect2(640, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down_right0"]
-atlas = ExtResource("lancer_7_attack_down_right")
-region = Rect2(0, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down_right1"]
-atlas = ExtResource("lancer_7_attack_down_right")
-region = Rect2(320, 0, 320, 320)
-
-[sub_resource type="AtlasTexture" id="lancer_AtlasTexture_attack_down_right2"]
-atlas = ExtResource("lancer_7_attack_down_right")
-region = Rect2(640, 0, 320, 320)
-
 [sub_resource type="SpriteFrames" id="SpriteFrames_lancer"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_down0")
+}, {
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_down1")
+}, {
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_down2")
+}],
+"loop": false,
+"name": &"attack_down",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_down_right0")
+}, {
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_down_right1")
+}, {
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_down_right2")
+}],
+"loop": false,
+"name": &"attack_down_right",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_right0")
+}, {
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_right1")
+}, {
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_right2")
+}],
+"loop": false,
+"name": &"attack_right",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_up0")
+}, {
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_up1")
+}, {
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_up2")
+}],
+"loop": false,
+"name": &"attack_up",
+"speed": 14.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_up_right0")
+}, {
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_up_right1")
+}, {
+"duration": 1.0,
+"texture": SubResource("lancer_AtlasTexture_attack_up_right2")
+}],
+"loop": false,
+"name": &"attack_up_right",
+"speed": 14.0
+}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("lancer_AtlasTexture_idle0")
@@ -359,234 +440,6 @@ animations = [{
 "loop": true,
 "name": &"run",
 "speed": 12.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_right0")
-}, {
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_right1")
-}, {
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_right2")
-}],
-"loop": false,
-"name": &"attack_right",
-"speed": 14.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_up0")
-}, {
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_up1")
-}, {
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_up2")
-}],
-"loop": false,
-"name": &"attack_up",
-"speed": 14.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_down0")
-}, {
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_down1")
-}, {
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_down2")
-}],
-"loop": false,
-"name": &"attack_down",
-"speed": 14.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_up_right0")
-}, {
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_up_right1")
-}, {
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_up_right2")
-}],
-"loop": false,
-"name": &"attack_up_right",
-"speed": 14.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_down_right0")
-}, {
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_down_right1")
-}, {
-"duration": 1.0,
-"texture": SubResource("lancer_AtlasTexture_attack_down_right2")
-}],
-"loop": false,
-"name": &"attack_down_right",
-"speed": 14.0
-}]
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle0"]
-atlas = ExtResource("pawn_1_idle")
-region = Rect2(0, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle1"]
-atlas = ExtResource("pawn_1_idle")
-region = Rect2(192, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle2"]
-atlas = ExtResource("pawn_1_idle")
-region = Rect2(384, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle3"]
-atlas = ExtResource("pawn_1_idle")
-region = Rect2(576, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle4"]
-atlas = ExtResource("pawn_1_idle")
-region = Rect2(768, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle5"]
-atlas = ExtResource("pawn_1_idle")
-region = Rect2(960, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle6"]
-atlas = ExtResource("pawn_1_idle")
-region = Rect2(1152, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_idle7"]
-atlas = ExtResource("pawn_1_idle")
-region = Rect2(1344, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run0"]
-atlas = ExtResource("pawn_2_run")
-region = Rect2(0, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run1"]
-atlas = ExtResource("pawn_2_run")
-region = Rect2(192, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run2"]
-atlas = ExtResource("pawn_2_run")
-region = Rect2(384, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run3"]
-atlas = ExtResource("pawn_2_run")
-region = Rect2(576, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run4"]
-atlas = ExtResource("pawn_2_run")
-region = Rect2(768, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_run5"]
-atlas = ExtResource("pawn_2_run")
-region = Rect2(960, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack0"]
-atlas = ExtResource("pawn_3_attack")
-region = Rect2(0, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack1"]
-atlas = ExtResource("pawn_3_attack")
-region = Rect2(192, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack2"]
-atlas = ExtResource("pawn_3_attack")
-region = Rect2(384, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack3"]
-atlas = ExtResource("pawn_3_attack")
-region = Rect2(576, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack4"]
-atlas = ExtResource("pawn_3_attack")
-region = Rect2(768, 0, 192, 192)
-
-[sub_resource type="AtlasTexture" id="pawn_AtlasTexture_attack5"]
-atlas = ExtResource("pawn_3_attack")
-region = Rect2(960, 0, 192, 192)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_pawn"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_idle0")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_idle1")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_idle2")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_idle3")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_idle4")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_idle5")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_idle6")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_idle7")
-}],
-"loop": true,
-"name": &"idle",
-"speed": 10.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_run0")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_run1")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_run2")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_run3")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_run4")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_run5")
-}],
-"loop": true,
-"name": &"run",
-"speed": 12.0
-}, {
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_attack0")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_attack1")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_attack2")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_attack3")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_attack4")
-}, {
-"duration": 1.0,
-"texture": SubResource("pawn_AtlasTexture_attack5")
-}],
-"loop": false,
-"name": &"attack",
-"speed": 14.0
 }]
 
 [node name="ChaserEnemy" type="RigidBody2D" unique_id=1016104431]
@@ -603,27 +456,27 @@ DestroyByPlayerSpeed = 30.0
 [node name="Collision" type="CollisionShape2D" parent="." unique_id=1892820263]
 shape = SubResource("RectangleShape2D_body")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="." unique_id=572212476]
 position = Vector2(0, -8)
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_pawn")
 animation = &"run"
 autoplay = "run"
 
-[node name="AnimatedSprite2D_Archer" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D_Archer" type="AnimatedSprite2D" parent="." unique_id=20250447]
 visible = false
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_pawn")
 animation = &"run"
 
-[node name="AnimatedSprite2D_Lancer" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D_Lancer" type="AnimatedSprite2D" parent="." unique_id=1964523215]
 visible = false
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_lancer")
 animation = &"run"
 
-[node name="AnimatedSprite2D_Pawn" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite2D_Pawn" type="AnimatedSprite2D" parent="." unique_id=1310408252]
 visible = false
 position = Vector2(0, -8)
 sprite_frames = SubResource("SpriteFrames_pawn")
 animation = &"run"
-

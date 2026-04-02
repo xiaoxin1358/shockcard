@@ -1,53 +1,106 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://cfuigx8bxv2vw"]
 
-[ext_resource type="Script" path="res://scripts/EnemyController.cs" id="1_enemy"]
+[ext_resource type="Script" uid="uid://c4e4yifo4ucn4" path="res://scripts/EnemyController.cs" id="1_enemy"]
 [ext_resource type="PackedScene" path="res://scenes/CardDrop.tscn" id="2_drop"]
+[ext_resource type="Texture2D" uid="uid://dnsd7xqogpfve" path="res://Tiny Swords/Tiny Swords (Free Pack)/Units/Yellow Units/Monk/Idle.png" id="3_monk_idle"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(36, 36)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
-size = Vector2(42, 42)
+[sub_resource type="AtlasTexture" id="AtlasTexture_monk_idle_0"]
+atlas = ExtResource("3_monk_idle")
+region = Rect2(0, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_monk_idle_1"]
+atlas = ExtResource("3_monk_idle")
+region = Rect2(192, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_monk_idle_2"]
+atlas = ExtResource("3_monk_idle")
+region = Rect2(384, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_monk_idle_3"]
+atlas = ExtResource("3_monk_idle")
+region = Rect2(576, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_monk_idle_4"]
+atlas = ExtResource("3_monk_idle")
+region = Rect2(768, 0, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_monk_idle_5"]
+atlas = ExtResource("3_monk_idle")
+region = Rect2(960, 0, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_monk"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_monk_idle_0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_monk_idle_1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_monk_idle_2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_monk_idle_3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_monk_idle_4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_monk_idle_5")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 8.0
+}]
 
 [sub_resource type="LabelSettings" id="LabelSettings_card"]
 font_size = 20
 outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 
-[node name="Enemy" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(42, 42)
+
+[node name="Enemy" type="CharacterBody2D" unique_id=968614417]
 collision_layer = 4
 collision_mask = 3
 script = ExtResource("1_enemy")
 CardDropScene = ExtResource("2_drop")
 
-[node name="Collision" type="CollisionShape2D" parent="."]
+[node name="Collision" type="CollisionShape2D" parent="." unique_id=1609050208]
 shape = SubResource("RectangleShape2D_body")
 
-[node name="Visual" type="Node2D" parent="."]
+[node name="Visual" type="Node2D" parent="." unique_id=1720712989]
 
-[node name="Body" type="Polygon2D" parent="Visual"]
-polygon = PackedVector2Array(-18, -18, 18, -18, 18, 18, -18, 18)
-color = Color(0.9, 0.27, 0.27, 1)
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="Visual" unique_id=149035546]
+position = Vector2(0, -1)
+scale = Vector2(0.6, 0.6)
+sprite_frames = SubResource("SpriteFrames_monk")
+animation = &"idle"
+autoplay = "idle"
 
-[node name="CardText" type="Label" parent="Visual"]
+[node name="CardText" type="Label" parent="Visual" unique_id=1395242319]
 offset_left = -30.0
 offset_top = -48.0
 offset_right = 30.0
 offset_bottom = -20.0
+text = "♠A"
 label_settings = SubResource("LabelSettings_card")
 horizontal_alignment = 1
-text = "♠A"
 
-[node name="Hurtbox" type="Area2D" parent="."]
+[node name="Hurtbox" type="Area2D" parent="." unique_id=347390011]
 collision_layer = 0
 collision_mask = 2
-monitoring = true
 monitorable = false
 
-[node name="HurtboxShape" type="CollisionShape2D" parent="Hurtbox"]
+[node name="HurtboxShape" type="CollisionShape2D" parent="Hurtbox" unique_id=78739224]
 shape = SubResource("RectangleShape2D_hurtbox")
 
-[node name="DropAnchor" type="Marker2D" parent="."]
+[node name="DropAnchor" type="Marker2D" parent="." unique_id=1690275055]
 position = Vector2(0, -24)
 
-[node name="StateAnchor" type="Node" parent="."]
+[node name="StateAnchor" type="Node" parent="." unique_id=793810662]

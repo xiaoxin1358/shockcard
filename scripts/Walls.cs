@@ -3,13 +3,14 @@ using Godot;
 public partial class Walls : StaticBody2D
 {
 	[Export] public Vector2 MapSize = new Vector2(1000.0f, 1000.0f);
-	[Export] public float WallBounce = 0.9f;
-	[Export] public float WallFriction = 0.05f;
+	[Export] public float WallBounce = 0.98f;
+	[Export] public float WallFriction = 0.01f;
 	[Export] public Color BorderColor = new Color(0.55f, 0.55f, 0.55f, 0.95f);
 	[Export] public float BorderWidth = 3.0f;
 
 	public override void _Ready()
 	{
+		AddToGroup("wall");
 		EnsurePhysicsMaterial();
 		QueueRedraw();
 	}
@@ -36,8 +37,8 @@ public partial class Walls : StaticBody2D
 			mat = new PhysicsMaterial();
 		}
 
-		mat.Bounce = Mathf.Max(0.8f, WallBounce);
-		mat.Friction = Mathf.Max(0.0f, WallFriction);
+		mat.Bounce = Mathf.Clamp(WallBounce, 0.0f, 1.0f);
+		mat.Friction = Mathf.Clamp(WallFriction, 0.0f, 1.0f);
 		PhysicsMaterialOverride = mat;
 	}
 }

@@ -11,6 +11,8 @@ public partial class PlayerController : CharacterBody2D
 	[Export] public float MaxSpeed = 1200.0f;
 	[Export] public float SlideDamping = 520.0f;
 	[Export] public float CollisionRetain = 0.72f;
+	[Export] public float WallCollisionRetain = 0.95f;
+	[Export] public float WallBounceMinSpeed = 80.0f;
 	[Export] public float StopSpeedThreshold = 18.0f;
 	[Export] public float ImpactScale = 0.03f;
 	[Export] public float EnergyCostPerImpulse = 0.02f;
@@ -271,17 +273,46 @@ public partial class PlayerController : CharacterBody2D
 		}
 
 		Vector2 adjustedVelocity = Velocity;
+		Vector2 collisionVelocity = preMoveVelocity;
 
 		for (int i = 0; i < collisionCount; i++)
 		{
 			KinematicCollision2D collision = GetSlideCollision(i);
 			Node collider = collision.GetCollider() as Node;
+			bool isWallCollider = IsWallCollider(collider);
 			if (collider != null && collider.IsInGroup("enemy"))
 			{
 				PlayAttackAnimation();
 			}
 
 			Vector2 normal = collision.GetNormal();
+			if (isWallCollider)
+			{
+				Vector2 bounceSource = collisionVelocity.LengthSquared() > 1.0f ? collisionVelocity : adjustedVelocity;
+				adjustedVelocity = bounceSource.Bounce(normal) * Mathf.Clamp(WallCollisionRetain, 0.0f, 1.2f);
+
+				// Guarantee an outward component so the body does not keep scraping along the wall.
+				float outward = adjustedVelocity.Dot(normal);
+				if (outward <= 0.0f)
+				{
+					adjustedVelocity += normal * Mathf.Max(40.0f, WallBounceMinSpeed * 0.5f);
+				}
+
+				if (adjustedVelocity.Length() < WallBounceMinSpeed)
+				{
+					if (adjustedVelocity.LengthSquared() > 0.001f)
+					{
+						adjustedVelocity = adjustedVelocity.Normalized() * WallBounceMinSpeed;
+					}
+					else
+					{
+						adjustedVelocity = normal * WallBounceMinSpeed;
+					}
+				}
+
+				collisionVelocity = adjustedVelocity;
+				continue;
+			}
 
 			Vector2 tangentComponent = adjustedVelocity.Slide(normal);
 			if (tangentComponent.LengthSquared() > 1.0f)
@@ -292,9 +323,27 @@ public partial class PlayerController : CharacterBody2D
 			{
 				adjustedVelocity = adjustedVelocity.Bounce(normal) * CollisionRetain;
 			}
+
+			collisionVelocity = adjustedVelocity;
 		}
 
 		Velocity = adjustedVelocity.LimitLength(MaxSpeed);
+	}
+
+	private static bool IsWallCollider(Node collider)
+	{
+		if (collider == null)
+		{
+			return false;
+		}
+
+		if (collider is Walls || collider.IsInGroup("wall") || collider.Name == "Walls")
+		{
+			return true;
+		}
+
+		Node parent = collider.GetParent();
+		return parent is Walls || (parent != null && (parent.IsInGroup("wall") || parent.Name == "Walls"));
 	}
 
 	private void UpdateMovementAnimation()
