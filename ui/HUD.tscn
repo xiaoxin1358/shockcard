@@ -1,12 +1,16 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene format=3 uid="uid://ctrcg7sus6on1"]
 
-[ext_resource type="Script" path="res://scripts/HUD.cs" id="1_hud"]
-[ext_resource type="Script" path="res://scripts/EnergyBarUI.cs" id="2_energyui"]
-[ext_resource type="Script" path="res://scripts/CardDisplayUI.cs" id="3_cardui"]
-[ext_resource type="Script" path="res://scripts/BossHpBarUI.cs" id="4_bossui"]
-[ext_resource type="Script" path="res://scripts/PhaseHintUI.cs" id="5_phaseui"]
+[ext_resource type="Script" uid="uid://hwmiktu2f2f6" path="res://scripts/HUD.cs" id="1_hud"]
+[ext_resource type="Script" uid="uid://c0qgwcurp0rs7" path="res://scripts/EnergyBarUI.cs" id="2_energyui"]
+[ext_resource type="Script" uid="uid://da2putduqsxx0" path="res://scripts/CardDisplayUI.cs" id="3_cardui"]
+[ext_resource type="Script" uid="uid://b33y8aeexm1pl" path="res://scripts/BossHpBarUI.cs" id="4_bossui"]
+[ext_resource type="Texture2D" uid="uid://bm7s5flwiwiht" path="res://sorces/SBS - 2D Poker Pack/Top-Down/Cards/Spades-88x124.png" id="4_li43i"]
+[ext_resource type="Texture2D" uid="uid://dlb0h3vpkvo5t" path="res://sorces/SBS - 2D Poker Pack/Top-Down/Cards/Hearts-88x124.png" id="5_a33y5"]
+[ext_resource type="Script" uid="uid://d1wgn0wgb472s" path="res://scripts/PhaseHintUI.cs" id="5_phaseui"]
+[ext_resource type="Texture2D" uid="uid://k2ewamqhqrtk" path="res://sorces/SBS - 2D Poker Pack/Top-Down/Cards/Clubs-88x124.png" id="6_37bek"]
+[ext_resource type="Texture2D" uid="uid://cshjo48djqcvi" path="res://sorces/SBS - 2D Poker Pack/Top-Down/Cards/Diamonds-88x124.png" id="7_28i83"]
 
-[node name="HUD" type="Control"]
+[node name="HUD" type="Control" unique_id=403236160]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -15,88 +19,104 @@ grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_hud")
 
-[node name="TopBar" type="HBoxContainer" parent="."]
-layout_mode = 2
+[node name="TopBar" type="HBoxContainer" parent="." unique_id=1647642048]
+layout_mode = 0
 offset_left = 16.0
 offset_top = 16.0
 offset_right = 1264.0
 offset_bottom = 124.0
 theme_override_constants/separation = 24
 
-[node name="EnergyPanel" type="VBoxContainer" parent="TopBar"]
+[node name="EnergyPanel" type="VBoxContainer" parent="TopBar" unique_id=1965454054]
+layout_mode = 2
 script = ExtResource("2_energyui")
 
-[node name="EnergyLabel" type="Label" parent="TopBar/EnergyPanel"]
+[node name="EnergyLabel" type="Label" parent="TopBar/EnergyPanel" unique_id=1454654793]
+layout_mode = 2
 text = "Energy"
 
-[node name="EnergyBar" type="TextureProgressBar" parent="TopBar/EnergyPanel"]
+[node name="EnergyBar" type="TextureProgressBar" parent="TopBar/EnergyPanel" unique_id=1476930348]
 custom_minimum_size = Vector2(220, 24)
-max_value = 100.0
+layout_mode = 2
 value = 100.0
 
-[node name="EnergyValue" type="Label" parent="TopBar/EnergyPanel"]
+[node name="EnergyValue" type="Label" parent="TopBar/EnergyPanel" unique_id=531995962]
+layout_mode = 2
 text = "100 / 100"
 
-[node name="DeckPanel" type="VBoxContainer" parent="TopBar"]
+[node name="DeckPanel" type="VBoxContainer" parent="TopBar" unique_id=1243778855]
+layout_mode = 2
 script = ExtResource("3_cardui")
+SpadeAtlas = ExtResource("4_li43i")
+HeartAtlas = ExtResource("5_a33y5")
+ClubAtlas = ExtResource("6_37bek")
+DiamondAtlas = ExtResource("7_28i83")
 
-[node name="DeckLabel" type="Label" parent="TopBar/DeckPanel"]
+[node name="DeckLabel" type="Label" parent="TopBar/DeckPanel" unique_id=1306953094]
+layout_mode = 2
 text = "Deck"
 
-[node name="DeckCount" type="Label" parent="TopBar/DeckPanel"]
+[node name="DeckCount" type="Label" parent="TopBar/DeckPanel" unique_id=1815687873]
+layout_mode = 2
 text = "0"
 
-[node name="CardSlots" type="HBoxContainer" parent="TopBar/DeckPanel"]
+[node name="CardSlots" type="HBoxContainer" parent="TopBar/DeckPanel" unique_id=849041494]
+layout_mode = 2
 theme_override_constants/separation = 6
 
-[node name="Slot0" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots"]
+[node name="Slot0" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots" unique_id=1027180545]
 custom_minimum_size = Vector2(54, 72)
+layout_mode = 2
 
-[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot0"]
+[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot0" unique_id=1002194952]
 layout_mode = 2
 text = "--"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Slot1" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots"]
+[node name="Slot1" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots" unique_id=907881152]
 custom_minimum_size = Vector2(54, 72)
+layout_mode = 2
 
-[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot1"]
+[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot1" unique_id=240296114]
 layout_mode = 2
 text = "--"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Slot2" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots"]
+[node name="Slot2" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots" unique_id=17043456]
 custom_minimum_size = Vector2(54, 72)
+layout_mode = 2
 
-[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot2"]
+[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot2" unique_id=1300226696]
 layout_mode = 2
 text = "--"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Slot3" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots"]
+[node name="Slot3" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots" unique_id=812499693]
 custom_minimum_size = Vector2(54, 72)
+layout_mode = 2
 
-[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot3"]
+[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot3" unique_id=535729576]
 layout_mode = 2
 text = "--"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="Slot4" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots"]
+[node name="Slot4" type="PanelContainer" parent="TopBar/DeckPanel/CardSlots" unique_id=672971573]
 custom_minimum_size = Vector2(54, 72)
+layout_mode = 2
 
-[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot4"]
+[node name="CardLabel" type="Label" parent="TopBar/DeckPanel/CardSlots/Slot4" unique_id=252420132]
 layout_mode = 2
 text = "--"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BossTop" type="CenterContainer" parent="."]
+[node name="BossTop" type="CenterContainer" parent="." unique_id=532598828]
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
 offset_left = -220.0
@@ -105,22 +125,25 @@ offset_right = 220.0
 offset_bottom = 92.0
 grow_horizontal = 2
 
-[node name="BossBarPanel" type="VBoxContainer" parent="BossTop"]
+[node name="BossBarPanel" type="VBoxContainer" parent="BossTop" unique_id=1067908795]
+layout_mode = 2
 script = ExtResource("4_bossui")
 
-[node name="BossName" type="Label" parent="BossTop/BossBarPanel"]
+[node name="BossName" type="Label" parent="BossTop/BossBarPanel" unique_id=1498602330]
+layout_mode = 2
 text = "Boss"
 
-[node name="BossHpBar" type="TextureProgressBar" parent="BossTop/BossBarPanel"]
+[node name="BossHpBar" type="TextureProgressBar" parent="BossTop/BossBarPanel" unique_id=1125520605]
 custom_minimum_size = Vector2(360, 24)
-max_value = 100.0
+layout_mode = 2
 value = 100.0
 
-[node name="BossHpText" type="Label" parent="BossTop/BossBarPanel"]
+[node name="BossHpText" type="Label" parent="BossTop/BossBarPanel" unique_id=1429111541]
+layout_mode = 2
 text = "100 / 100"
 horizontal_alignment = 1
 
-[node name="PhaseBanner" type="CenterContainer" parent="."]
+[node name="PhaseBanner" type="CenterContainer" parent="." unique_id=1156150382]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -131,13 +154,16 @@ offset_left = -200.0
 offset_top = -40.0
 offset_right = 200.0
 offset_bottom = 40.0
+grow_horizontal = 2
+grow_vertical = 2
 script = ExtResource("5_phaseui")
 
-[node name="PhaseText" type="Label" parent="PhaseBanner"]
+[node name="PhaseText" type="Label" parent="PhaseBanner" unique_id=1525350751]
+layout_mode = 2
 text = "PHASE 1"
 horizontal_alignment = 1
 
-[node name="DebugPanel" type="PanelContainer" parent="."]
+[node name="DebugPanel" type="PanelContainer" parent="." unique_id=385415566]
 visible = false
 layout_mode = 1
 anchors_preset = 1
@@ -147,13 +173,14 @@ offset_left = -360.0
 offset_top = 16.0
 offset_right = -16.0
 offset_bottom = 176.0
+grow_horizontal = 0
 
-[node name="DebugText" type="Label" parent="DebugPanel"]
+[node name="DebugText" type="Label" parent="DebugPanel" unique_id=843928011]
 layout_mode = 2
 text = "Debug"
 vertical_alignment = 1
 
-[node name="SettlementPanel" type="CenterContainer" parent="."]
+[node name="SettlementPanel" type="CenterContainer" parent="." unique_id=1445523031]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -165,12 +192,15 @@ offset_left = -220.0
 offset_top = 80.0
 offset_right = 220.0
 offset_bottom = 160.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="SettlementText" type="Label" parent="SettlementPanel"]
+[node name="SettlementText" type="Label" parent="SettlementPanel" unique_id=1705663941]
+layout_mode = 2
 text = "Settlement"
 horizontal_alignment = 1
 
-[node name="ResultPanel" type="CenterContainer" parent="."]
+[node name="ResultPanel" type="CenterContainer" parent="." unique_id=1586026555]
 visible = false
 layout_mode = 1
 anchors_preset = 8
@@ -182,16 +212,19 @@ offset_left = -260.0
 offset_top = -56.0
 offset_right = 260.0
 offset_bottom = 84.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="ResultContent" type="VBoxContainer" parent="ResultPanel"]
+[node name="ResultContent" type="VBoxContainer" parent="ResultPanel" unique_id=1450608056]
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="ResultText" type="Label" parent="ResultPanel/ResultContent"]
+[node name="ResultText" type="Label" parent="ResultPanel/ResultContent" unique_id=791354918]
+layout_mode = 2
 text = "Result"
 horizontal_alignment = 1
 
-[node name="RestartButton" type="Button" parent="ResultPanel/ResultContent"]
+[node name="RestartButton" type="Button" parent="ResultPanel/ResultContent" unique_id=39967758]
 custom_minimum_size = Vector2(180, 38)
 layout_mode = 2
 text = "RESTART"

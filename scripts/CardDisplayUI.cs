@@ -5,6 +5,13 @@ public partial class CardDisplayUI : VBoxContainer
 {
 	[Export] public NodePath SettlementPanelPath = "../../SettlementPanel";
 	[Export] public NodePath SettlementTextPath = "../../SettlementPanel/SettlementText";
+	[Export] public Texture2D SpadeAtlas;
+	[Export] public Texture2D HeartAtlas;
+	[Export] public Texture2D ClubAtlas;
+	[Export] public Texture2D DiamondAtlas;
+	[Export] public int AtlasColumns = 5;
+	[Export] public int AtlasRows = 3;
+	[Export] public int LastRowCardCount = 3;
 
 	private Label _deckCount;
 	private Control _settlementPanel;
@@ -12,6 +19,8 @@ public partial class CardDisplayUI : VBoxContainer
 	private FeedbackManager _feedback;
 	private readonly List<Control> _slotRoots = new();
 	private readonly List<Label> _slotLabels = new();
+	private readonly List<TextureRect> _slotTextures = new();
+	private readonly Dictionary<int, AtlasTexture> _cardTextureCache = new();
 
 	public override void _Ready()
 	{
@@ -43,15 +52,14 @@ public partial class CardDisplayUI : VBoxContainer
 
 	public void OnCardCollected(int slotIndex, CardData data, int currentCount, int maxCount)
 	{
-		if (_slotLabels.Count == 0)
+		if (_slotRoots.Count == 0)
 		{
 			SetDeckCount(currentCount, maxCount);
 			return;
 		}
 
-		int safeIndex = Mathf.Clamp(slotIndex, 0, _slotLabels.Count - 1);
-		Label label = _slotLabels[safeIndex];
-		label.Text = data.DisplayText;
+		int safeIndex = Mathf.Clamp(slotIndex, 0, _slotRoots.Count - 1);
+		SetSlotCardVisual(safeIndex, data);
 
 		Control slot = _slotRoots[safeIndex];
 		slot.Scale = new Vector2(0.75f, 0.75f);
@@ -88,6 +96,7 @@ public partial class CardDisplayUI : VBoxContainer
 	{
 		_slotRoots.Clear();
 		_slotLabels.Clear();
+		_slotTextures.Clear();
 
 		Node slotsContainer = GetNodeOrNull("CardSlots");
 		if (slotsContainer == null)
@@ -104,14 +113,31 @@ public partial class CardDisplayUI : VBoxContainer
 			}
 
 			Label label = slotRoot.GetNodeOrNull<Label>("CardLabel");
-			if (label == null)
+			if (label != null)
 			{
-				continue;
+				label.Text = "--";
+				label.Visible = false;
 			}
 
-			label.Text = "--";
+			TextureRect cardTexture = slotRoot.GetNodeOrNull<TextureRect>("CardTexture");
+			if (cardTexture == null)
+			{
+				cardTexture = new TextureRect();
+				cardTexture.Name = "CardTexture";
+				cardTexture.MouseFilter = MouseFilterEnum.Ignore;
+				cardTexture.ExpandMode = TextureRect.ExpandModeEnum.IgnoreSize;
+				cardTexture.StretchMode = TextureRect.StretchModeEnum.KeepAspectCentered;
+				cardTexture.SetAnchorsPreset(Control.LayoutPreset.FullRect);
+				cardTexture.OffsetLeft = 2.0f;
+				cardTexture.OffsetTop = 2.0f;
+				cardTexture.OffsetRight = -2.0f;
+				cardTexture.OffsetBottom = -2.0f;
+				slotRoot.AddChild(cardTexture);
+			}
+
 			_slotRoots.Add(slotRoot);
 			_slotLabels.Add(label);
+			_slotTextures.Add(cardTexture);
 		}
 	}
 
@@ -177,7 +203,7 @@ public partial class CardDisplayUI : VBoxContainer
 
 	private void RefreshCardSlots(IReadOnlyList<CardData> cards, int maxSlots)
 	{
-		for (int i = 0; i < _slotLabels.Count; i++)
+		for (int i = 0; i < _slotRoots.Count; i++)
 		{
 			Control slot = _slotRoots[i];
 			slot.Modulate = new Color(1, 1, 1, 1);
@@ -185,15 +211,116 @@ public partial class CardDisplayUI : VBoxContainer
 
 			if (i < cards.Count)
 			{
-				_slotLabels[i].Text = cards[i].DisplayText;
+				SetSlotCardVisual(i, cards[i]);
 			}
 			else
 			{
-				_slotLabels[i].Text = "--";
+				ClearSlotCardVisual(i);
 			}
 		}
 
 		SetDeckCount(cards.Count, maxSlots);
+	}
+
+	private void SetSlotCardVisual(int slotIndex, CardData data)
+	{
+		if (slotIndex < 0 || slotIndex >= _slotRoots.Count)
+		{
+			return;
+		}
+
+		if (slotIndex < _slotLabels.Count && _slotLabels[slotIndex] != null)
+		{
+			_slotLabels[slotIndex].Text = data.DisplayText;
+			_slotLabels[slotIndex].Visible = false;
+		}
+
+		if (slotIndex >= _slotTextures.Count || _slotTextures[slotIndex] == null)
+		{
+			return;
+		}
+
+		_slotTextures[slotIndex].Texture = GetCardTexture(data.Suit, data.Rank);
+	}
+
+	private void ClearSlotCardVisual(int slotIndex)
+	{
+		if (slotIndex < 0 || slotIndex >= _slotRoots.Count)
+		{
+			return;
+		}
+
+		if (slotIndex < _slotLabels.Count && _slotLabels[slotIndex] != null)
+		{
+			_slotLabels[slotIndex].Text = "--";
+			_slotLabels[slotIndex].Visible = false;
+		}
+
+		if (slotIndex < _slotTextures.Count && _slotTextures[slotIndex] != null)
+		{
+			_slotTextures[slotIndex].Texture = null;
+		}
+	}
+
+	private AtlasTexture GetCardTexture(CardSuit suit, CardRank rank)
+	{
+		int rankIndex = (int)rank;
+		if (rankIndex < 0)
+		{
+			return null;
+		}
+
+		int cacheKey = (((int)suit) << 8) | rankIndex;
+		if (_cardTextureCache.TryGetValue(cacheKey, out AtlasTexture cached))
+		{
+			return cached;
+		}
+
+		Texture2D atlasTexture = GetSuitAtlas(suit);
+		if (atlasTexture == null)
+		{
+			return null;
+		}
+
+		int columns = Mathf.Max(1, AtlasColumns);
+		int rows = Mathf.Max(1, AtlasRows);
+		int row = rankIndex / columns;
+		int col = rankIndex % columns;
+
+		if (row >= rows)
+		{
+			return null;
+		}
+
+		if (row == rows - 1 && LastRowCardCount > 0 && col >= LastRowCardCount)
+		{
+			return null;
+		}
+
+		float cardWidth = (float)atlasTexture.GetWidth() / columns;
+		float cardHeight = (float)atlasTexture.GetHeight() / rows;
+		if (cardWidth <= 0.0f || cardHeight <= 0.0f)
+		{
+			return null;
+		}
+
+		var atlas = new AtlasTexture();
+		atlas.Atlas = atlasTexture;
+		atlas.Region = new Rect2(col * cardWidth, row * cardHeight, cardWidth, cardHeight);
+		_cardTextureCache[cacheKey] = atlas;
+		return atlas;
+	}
+
+	private Texture2D GetSuitAtlas(CardSuit suit)
+	{
+		return suit switch
+		{
+			CardSuit.Spade => SpadeAtlas,
+			CardSuit.Heart => HeartAtlas,
+			CardSuit.Club => ClubAtlas,
+			CardSuit.Diamond => DiamondAtlas,
+			_ => null
+		};
 	}
 
 	private void SetDeckCount(int current, int max)
