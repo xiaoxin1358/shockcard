@@ -4,6 +4,7 @@ using System.Collections.Generic;
 public partial class SpawnManager : Node
 {
 	[Export] public PackedScene EnemyScene;
+	[Export] public PackedScene ChaserEnemyScene;
 	[Export] public PackedScene ObstacleScene;
 
 	[Export] public NodePath EnemiesContainerPath = "Runtime/Enemies";
@@ -11,16 +12,67 @@ public partial class SpawnManager : Node
 	[Export] public NodePath DropsContainerPath = "Runtime/Drops";
 	[Export] public NodePath EnemySpawnPointsPath = "World/SpawnPoints/EnemySpawns";
 	[Export] public NodePath ObstacleSpawnPointsPath = "World/SpawnPoints/ObstacleSpawns";
-	[Export] public NodePath PlayerPath = "Runtime/PlayerInstance";
+	[Export] public NodePath PlayerPath = "Runtime/Player";
 	[Export] public NodePath PlayerSpawnPath = "World/SpawnPoints/PlayerSpawn";
 
 	[Export] public int EnemySpawnCount = 2;
 	[Export] public int ObstacleSpawnCount = 2;
 	[Export] public bool RandomObstacleType = true;
+	[Export] public bool EnablePeriodicEnemySpawn = true;
+	[Export] public float EnemySpawnIntervalSec = 2.0f;
+	[Export] public bool EnablePeriodicChaserSpawn = true;
+	[Export] public float ChaserSpawnIntervalSec = 3.0f;
+	[Export] public int InitialChaserSpawnCount = 1;
+	[Export] public int MaxChaserEnemyCount = 3;
+	[Export] public Vector2 RandomSpawnHalfExtents = new Vector2(500.0f, 500.0f);
+	[Export] public float RandomSpawnEdgePadding = 72.0f;
+
+	private double _enemySpawnTimer;
+	private double _chaserSpawnTimer;
 
 	public override void _EnterTree()
 	{
 		AddToGroup("spawn_manager");
+	}
+
+	public override void _Ready()
+	{
+		ClearEnemies();
+		SpawnRuntimeCombatants();
+	}
+
+	public override void _Process(double delta)
+	{
+		if (!EnablePeriodicEnemySpawn)
+		{
+			_enemySpawnTimer = 0.0;
+		}
+		else
+		{
+			float interval = Mathf.Max(0.2f, EnemySpawnIntervalSec);
+			_enemySpawnTimer += delta;
+
+			while (_enemySpawnTimer >= interval)
+			{
+				_enemySpawnTimer -= interval;
+				SpawnSingleEnemyRandom();
+			}
+		}
+
+		if (!EnablePeriodicChaserSpawn)
+		{
+			_chaserSpawnTimer = 0.0;
+			return;
+		}
+
+		float chaserInterval = Mathf.Max(0.2f, ChaserSpawnIntervalSec);
+		_chaserSpawnTimer += delta;
+
+		while (_chaserSpawnTimer >= chaserInterval)
+		{
+			_chaserSpawnTimer -= chaserInterval;
+			SpawnSingleChaserEnemyRandom();
+		}
 	}
 
 	public void ClearEnemies()
@@ -121,8 +173,8 @@ public partial class SpawnManager : Node
 		{
 			markers = new List<Marker2D>
 			{
-				CreateFallbackMarker(new Vector2(500, 390)),
-				CreateFallbackMarker(new Vector2(760, 390))
+				CreateFallbackMarker(new Vector2(-150, 140)),
+				CreateFallbackMarker(new Vector2(170, -120))
 			};
 		}
 
@@ -156,8 +208,78 @@ public partial class SpawnManager : Node
 
 	public void SpawnRuntimeCombatants()
 	{
-		SpawnEnemies();
+		int initialEnemyCount = Mathf.Max(0, EnemySpawnCount);
+		for (int i = 0; i < initialEnemyCount; i++)
+		{
+			SpawnSingleEnemyRandom();
+		}
+
+		int initialChaserCount = Mathf.Clamp(InitialChaserSpawnCount, 0, Mathf.Max(0, MaxChaserEnemyCount));
+		for (int i = 0; i < initialChaserCount; i++)
+		{
+			SpawnSingleChaserEnemyRandom();
+		}
+
 		SpawnObstacles();
+	}
+
+	public void SpawnSingleEnemyRandom()
+	{
+		if (EnemyScene == null)
+		{
+			return;
+		}
+
+		Node enemiesContainer = ResolveNode(EnemiesContainerPath);
+		if (enemiesContainer == null)
+		{
+			return;
+		}
+
+		Node enemyNode = EnemyScene.Instantiate();
+		if (enemyNode is Node2D enemy2D)
+		{
+			float halfX = Mathf.Max(24.0f, RandomSpawnHalfExtents.X - RandomSpawnEdgePadding);
+			float halfY = Mathf.Max(24.0f, RandomSpawnHalfExtents.Y - RandomSpawnEdgePadding);
+			enemy2D.Position = new Vector2(
+				(float)GD.RandRange(-halfX, halfX),
+				(float)GD.RandRange(-halfY, halfY)
+			);
+		}
+
+		enemiesContainer.AddChild(enemyNode);
+	}
+
+	public void SpawnSingleChaserEnemyRandom()
+	{
+		if (ChaserEnemyScene == null)
+		{
+			return;
+		}
+
+		Node enemiesContainer = ResolveNode(EnemiesContainerPath);
+		if (enemiesContainer == null)
+		{
+			return;
+		}
+
+		if (CountChaserEnemies(enemiesContainer) >= Mathf.Max(0, MaxChaserEnemyCount))
+		{
+			return;
+		}
+
+		Node chaserNode = ChaserEnemyScene.Instantiate();
+		if (chaserNode is Node2D chaser2D)
+		{
+			float halfX = Mathf.Max(24.0f, RandomSpawnHalfExtents.X - RandomSpawnEdgePadding);
+			float halfY = Mathf.Max(24.0f, RandomSpawnHalfExtents.Y - RandomSpawnEdgePadding);
+			chaser2D.Position = new Vector2(
+				(float)GD.RandRange(-halfX, halfX),
+				(float)GD.RandRange(-halfY, halfY)
+			);
+		}
+
+		enemiesContainer.AddChild(chaserNode);
 	}
 
 	public void ResetPlayerToSpawn()
@@ -177,6 +299,9 @@ public partial class SpawnManager : Node
 
 	public void ResetRuntime(bool keepPlayerPosition)
 	{
+		_enemySpawnTimer = 0.0;
+		_chaserSpawnTimer = 0.0;
+
 		if (keepPlayerPosition)
 		{
 			KeepPlayerPosition();
@@ -230,5 +355,19 @@ public partial class SpawnManager : Node
 		var marker = new Marker2D();
 		marker.Position = position;
 		return marker;
+	}
+
+	private int CountChaserEnemies(Node enemiesContainer)
+	{
+		int count = 0;
+		foreach (Node child in enemiesContainer.GetChildren())
+		{
+			if (child is ChaserEnemy)
+			{
+				count += 1;
+			}
+		}
+
+		return count;
 	}
 }

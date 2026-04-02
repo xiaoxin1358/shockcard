@@ -2,6 +2,9 @@ using Godot;
 
 public partial class PlayerController : CharacterBody2D
 {
+	[Signal]
+	public delegate void HpChangedEventHandler(float currentHp, float maxHp);
+
 	[Export] public float MaxDragDistance = 220.0f;
 	[Export] public float MinEffectiveDrag = 10.0f;
 	[Export] public float ImpulsePerPixel = 9.0f;
@@ -12,9 +15,24 @@ public partial class PlayerController : CharacterBody2D
 	[Export] public float ImpactScale = 0.03f;
 	[Export] public float EnergyCostPerImpulse = 0.02f;
 	[Export] public float MinEnergyCost = 2.0f;
+	[Export] public float MaxHp = 100.0f;
+	[Export] public float StartHp = 100.0f;
+	[Export] public float DamageCooldownSec = 0.25f;
 	[Export] public string DragAction = "player_drag";
+	[Export] public bool EnableCameraControl = true;
+	[Export] public bool EnableDynamicZoom = true;
+	[Export] public bool ApplyDefaultZoomOnReady = true;
+	[Export] public float ZoomAtHighSpeed = 0.6f;
+	[Export] public float ZoomAtIdle = 0.8f;
+	[Export] public float DefaultZoom = 0.7f;
+	[Export] public float SpeedForHighZoom = 1200.0f;
+	[Export] public float ZoomLerpSpeed = 6.0f;
+	[Export] public float FollowSmoothingSpeed = 12.0f;
+	[Export] public Vector2 MapHalfExtents = new Vector2(500.0f, 500.0f);
 
 	public float LastImpactStrength { get; private set; }
+	public string CurrentStateName => _state.ToString();
+	public float CurrentHp { get; private set; }
 
 	private enum MoveState
 	{
@@ -26,8 +44,11 @@ public partial class PlayerController : CharacterBody2D
 	private MoveState _state = MoveState.Idle;
 	private Line2D _dragGuide;
 	private EnergyManager _energyManager;
+	private Camera2D _camera;
+	private GameManager _gameManager;
 	private Vector2 _dragStartGlobal;
 	private Vector2 _cachedDragVector;
+	private float _damageCooldownLeft;
 
 	public override void _Ready()
 	{
@@ -46,11 +67,18 @@ public partial class PlayerController : CharacterBody2D
 		}
 
 		_energyManager = GetTree().GetFirstNodeInGroup("energy_manager") as EnergyManager;
+		_gameManager = GetTree().GetFirstNodeInGroup("game_manager") as GameManager;
+		ResetHp();
+		SetupCamera();
 	}
 
 	public override void _PhysicsProcess(double delta)
 	{
 		float dt = (float)delta;
+		if (_damageCooldownLeft > 0.0f)
+		{
+			_damageCooldownLeft = Mathf.Max(0.0f, _damageCooldownLeft - dt);
+		}
 
 		bool dragPressed = IsDragPressed();
 		bool dragJustPressed = IsDragJustPressed();
@@ -96,6 +124,80 @@ public partial class PlayerController : CharacterBody2D
 				_state = MoveState.Idle;
 			}
 		}
+
+		UpdateCamera(dt);
+	}
+
+	public void ResetHp()
+	{
+		CurrentHp = Mathf.Clamp(StartHp, 0.0f, MaxHp);
+		EmitSignal(SignalName.HpChanged, CurrentHp, MaxHp);
+	}
+
+	public void TakeDamage(float amount)
+	{
+		if (amount <= 0.0f || CurrentHp <= 0.0f || _damageCooldownLeft > 0.0f)
+		{
+			return;
+		}
+
+		CurrentHp = Mathf.Clamp(CurrentHp - amount, 0.0f, MaxHp);
+		_damageCooldownLeft = Mathf.Max(0.0f, DamageCooldownSec);
+		EmitSignal(SignalName.HpChanged, CurrentHp, MaxHp);
+
+		if (CurrentHp <= 0.0f)
+		{
+			if (_gameManager == null)
+			{
+				_gameManager = GetTree().GetFirstNodeInGroup("game_manager") as GameManager;
+			}
+
+			_gameManager?.TryTriggerLose("Player Down");
+		}
+	}
+
+	private void SetupCamera()
+	{
+		_camera = GetNodeOrNull<Camera2D>("Camera2D");
+		if (_camera == null || !EnableCameraControl)
+		{
+			return;
+		}
+
+		_camera.MakeCurrent();
+		_camera.PositionSmoothingEnabled = true;
+		_camera.PositionSmoothingSpeed = FollowSmoothingSpeed;
+		_camera.LimitLeft = -Mathf.RoundToInt(MapHalfExtents.X);
+		_camera.LimitTop = -Mathf.RoundToInt(MapHalfExtents.Y);
+		_camera.LimitRight = Mathf.RoundToInt(MapHalfExtents.X);
+		_camera.LimitBottom = Mathf.RoundToInt(MapHalfExtents.Y);
+
+		if (ApplyDefaultZoomOnReady)
+		{
+			float z = Mathf.Clamp(DefaultZoom, ZoomAtHighSpeed, ZoomAtIdle);
+			_camera.Zoom = new Vector2(z, z);
+		}
+	}
+
+	private void UpdateCamera(float dt)
+	{
+		if (!EnableCameraControl || _camera == null)
+		{
+			return;
+		}
+
+		_camera.PositionSmoothingSpeed = FollowSmoothingSpeed;
+
+		if (!EnableDynamicZoom)
+		{
+			return;
+		}
+
+		float t = Mathf.Clamp(Velocity.Length() / Mathf.Max(1.0f, SpeedForHighZoom), 0.0f, 1.0f);
+		float targetZoom = Mathf.Lerp(ZoomAtIdle, ZoomAtHighSpeed, t);
+		float currentZoom = _camera.Zoom.X;
+		float nextZoom = Mathf.Lerp(currentZoom, targetZoom, dt * ZoomLerpSpeed);
+		_camera.Zoom = new Vector2(nextZoom, nextZoom);
 	}
 
 	private void ApplyDragImpulse(Vector2 dragVector)

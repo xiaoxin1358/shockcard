@@ -7,6 +7,8 @@ public partial class HUD : Control
 	private CardDisplayUI _cardDisplayUi;
 	private BossHpBarUI _bossHpBarUi;
 	private PhaseHintUI _phaseHintUi;
+	private Control _debugPanel;
+	private Label _debugText;
 	private Control _resultPanel;
 	private Label _resultText;
 
@@ -19,15 +21,39 @@ public partial class HUD : Control
 	{
 		_energyUi = GetNodeOrNull<EnergyBarUI>("TopBar/EnergyPanel");
 		_cardDisplayUi = GetNodeOrNull<CardDisplayUI>("TopBar/DeckPanel");
-		_bossHpBarUi = GetNodeOrNull<BossHpBarUI>("TopBar/BossBarPanel");
+		_bossHpBarUi = GetNodeOrNull<BossHpBarUI>("BossTop/BossBarPanel");
 		_phaseHintUi = GetNodeOrNull<PhaseHintUI>("PhaseBanner");
+		_debugPanel = GetNodeOrNull<Control>("DebugPanel");
+		_debugText = GetNodeOrNull<Label>("DebugPanel/DebugText");
 		_resultPanel = GetNodeOrNull<Control>("ResultPanel");
 		_resultText = GetNodeOrNull<Label>("ResultPanel/ResultText");
 
 		EnergyManager energyManager = GetTree().GetFirstNodeInGroup("energy_manager") as EnergyManager;
 		_energyUi?.BindEnergyManager(energyManager);
 
+		BossController boss = GetTree().GetFirstNodeInGroup("boss") as BossController;
+		BindBoss(boss);
+
+		SetDebugVisible(false);
+		SetDebugText(string.Empty);
+
 		ClearGameResult();
+	}
+
+	public void SetDebugVisible(bool visible)
+	{
+		if (_debugPanel != null)
+		{
+			_debugPanel.Visible = visible;
+		}
+	}
+
+	public void SetDebugText(string text)
+	{
+		if (_debugText != null)
+		{
+			_debugText.Text = text;
+		}
 	}
 
 	public void BindBoss(BossController boss)

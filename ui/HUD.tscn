@@ -34,6 +34,9 @@ custom_minimum_size = Vector2(220, 24)
 max_value = 100.0
 value = 100.0
 
+[node name="EnergyValue" type="Label" parent="TopBar/EnergyPanel"]
+text = "100 / 100"
+
 [node name="DeckPanel" type="VBoxContainer" parent="TopBar"]
 script = ExtResource("3_cardui")
 
@@ -91,16 +94,31 @@ text = "--"
 horizontal_alignment = 1
 vertical_alignment = 1
 
-[node name="BossBarPanel" type="VBoxContainer" parent="TopBar"]
+[node name="BossTop" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -220.0
+offset_top = 16.0
+offset_right = 220.0
+offset_bottom = 92.0
+grow_horizontal = 2
+
+[node name="BossBarPanel" type="VBoxContainer" parent="BossTop"]
 script = ExtResource("4_bossui")
 
-[node name="BossName" type="Label" parent="TopBar/BossBarPanel"]
+[node name="BossName" type="Label" parent="BossTop/BossBarPanel"]
 text = "Boss"
 
-[node name="BossHpBar" type="TextureProgressBar" parent="TopBar/BossBarPanel"]
+[node name="BossHpBar" type="TextureProgressBar" parent="BossTop/BossBarPanel"]
 custom_minimum_size = Vector2(360, 24)
 max_value = 100.0
 value = 100.0
+
+[node name="BossHpText" type="Label" parent="BossTop/BossBarPanel"]
+text = "100 / 100"
+horizontal_alignment = 1
 
 [node name="PhaseBanner" type="CenterContainer" parent="."]
 layout_mode = 1
@@ -118,6 +136,22 @@ script = ExtResource("5_phaseui")
 [node name="PhaseText" type="Label" parent="PhaseBanner"]
 text = "PHASE 1"
 horizontal_alignment = 1
+
+[node name="DebugPanel" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -360.0
+offset_top = 16.0
+offset_right = -16.0
+offset_bottom = 176.0
+
+[node name="DebugText" type="Label" parent="DebugPanel"]
+layout_mode = 2
+text = "Debug"
+vertical_alignment = 1
 
 [node name="SettlementPanel" type="CenterContainer" parent="."]
 visible = false

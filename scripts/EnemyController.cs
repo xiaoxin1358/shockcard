@@ -9,9 +9,12 @@ public partial class EnemyController : CharacterBody2D
 
 	private Area2D _hurtbox;
 	private Marker2D _dropAnchor;
+	private Label _cardText;
 	private Node _dropsRoot;
 	private CardManager _cardManager;
 	private FeedbackManager _feedback;
+	private readonly RandomNumberGenerator _rng = new();
+	private CardData _debugCardData;
 	private Vector2 _spawnPosition;
 	private int _patrolDir = 1;
 	private bool _isDead;
@@ -25,6 +28,7 @@ public partial class EnemyController : CharacterBody2D
 	{
 		_hurtbox = GetNodeOrNull<Area2D>("Hurtbox");
 		_dropAnchor = GetNodeOrNull<Marker2D>("DropAnchor");
+		_cardText = GetNodeOrNull<Label>("Visual/CardText");
 		_spawnPosition = GlobalPosition;
 
 		if (_hurtbox != null)
@@ -39,6 +43,12 @@ public partial class EnemyController : CharacterBody2D
 		if (CardDropScene == null)
 		{
 			CardDropScene = GD.Load<PackedScene>("res://scenes/CardDrop.tscn");
+		}
+
+		_debugCardData = CreateRandomCardData();
+		if (_cardText != null)
+		{
+			_cardText.Text = ToSuitSymbol(_debugCardData.Suit) + ToRankShort(_debugCardData.Rank);
 		}
 	}
 
@@ -95,8 +105,48 @@ public partial class EnemyController : CharacterBody2D
 	{
 		_isDead = true;
 		CardDrop drop = SpawnCardDrop();
-		_cardManager?.NotifyEnemyKilled(drop);
+		_cardManager?.NotifyEnemyKilled(drop, _debugCardData);
 		QueueFree();
+	}
+
+	private CardData CreateRandomCardData()
+	{
+		CardSuit suit = (CardSuit)_rng.RandiRange(0, 3);
+		CardRank rank = (CardRank)_rng.RandiRange(0, 12);
+		return new CardData(suit, rank);
+	}
+
+	private string ToSuitSymbol(CardSuit suit)
+	{
+		return suit switch
+		{
+			CardSuit.Spade => "♠",
+			CardSuit.Heart => "♥",
+			CardSuit.Club => "♣",
+			CardSuit.Diamond => "♦",
+			_ => "?"
+		};
+	}
+
+	private string ToRankShort(CardRank rank)
+	{
+		return rank switch
+		{
+			CardRank.Ace => "A",
+			CardRank.Two => "2",
+			CardRank.Three => "3",
+			CardRank.Four => "4",
+			CardRank.Five => "5",
+			CardRank.Six => "6",
+			CardRank.Seven => "7",
+			CardRank.Eight => "8",
+			CardRank.Nine => "9",
+			CardRank.Ten => "10",
+			CardRank.Jack => "J",
+			CardRank.Queen => "Q",
+			CardRank.King => "K",
+			_ => "?"
+		};
 	}
 
 	private CardDrop SpawnCardDrop()
@@ -112,11 +162,11 @@ public partial class EnemyController : CharacterBody2D
 
 		if (_dropsRoot != null)
 		{
-			_dropsRoot.AddChild(drop);
+			_dropsRoot.CallDeferred(Node.MethodName.AddChild, drop);
 		}
 		else
 		{
-			GetTree().CurrentScene?.AddChild(drop);
+			GetTree().CurrentScene?.CallDeferred(Node.MethodName.AddChild, drop);
 		}
 
 		return drop;

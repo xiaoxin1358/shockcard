@@ -16,6 +16,11 @@ public partial class ObstacleController : Node2D
 	private WoodBoard _woodBoard;
 	private StoneBoard _stoneBoard;
 
+	public override void _EnterTree()
+	{
+		AddToGroup("obstacle");
+	}
+
 	public override void _Ready()
 	{
 		_woodBoard = GetNodeOrNull<WoodBoard>("Wood");

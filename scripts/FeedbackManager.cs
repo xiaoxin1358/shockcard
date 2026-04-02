@@ -2,7 +2,7 @@ using Godot;
 
 public partial class FeedbackManager : Node
 {
-	[Export] public NodePath CameraPath = "CameraRig/Camera2D";
+	[Export] public NodePath CameraPath = "Runtime/Player/Camera2D";
 	[Export] public float MaxShakePixels = 22.0f;
 	[Export] public float ShakeRecoverSpeed = 6.0f;
 

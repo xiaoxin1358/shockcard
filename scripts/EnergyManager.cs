@@ -5,9 +5,9 @@ public partial class EnergyManager : Node
     [Signal]
     public delegate void EnergyChangedEventHandler(float currentEnergy, float maxEnergy);
 
-    [Export] public float MaxEnergy = 100.0f;
-    [Export] public float StartEnergy = 100.0f;
-    [Export] public float EnemyKillRestoreAmount = 20.0f;
+    [Export] public float MaxEnergy = 500.0f;
+    [Export] public float StartEnergy = 500.0f;
+    [Export] public float EnemyKillRestoreAmount = 50.0f;
     [Export] public float SettlementRestoreAmount = 35.0f;
 
     public float CurrentEnergy { get; private set; }

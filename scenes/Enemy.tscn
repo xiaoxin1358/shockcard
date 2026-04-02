@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/EnemyController.cs" id="1_enemy"]
 [ext_resource type="PackedScene" path="res://scenes/CardDrop.tscn" id="2_drop"]
@@ -8,6 +8,11 @@ size = Vector2(36, 36)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
 size = Vector2(42, 42)
+
+[sub_resource type="LabelSettings" id="LabelSettings_card"]
+font_size = 20
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
 
 [node name="Enemy" type="CharacterBody2D"]
 collision_layer = 4
@@ -20,7 +25,18 @@ shape = SubResource("RectangleShape2D_body")
 
 [node name="Visual" type="Node2D" parent="."]
 
-[node name="Sprite" type="Sprite2D" parent="Visual"]
+[node name="Body" type="Polygon2D" parent="Visual"]
+polygon = PackedVector2Array(-18, -18, 18, -18, 18, 18, -18, 18)
+color = Color(0.9, 0.27, 0.27, 1)
+
+[node name="CardText" type="Label" parent="Visual"]
+offset_left = -30.0
+offset_top = -48.0
+offset_right = 30.0
+offset_bottom = -20.0
+label_settings = SubResource("LabelSettings_card")
+horizontal_alignment = 1
+text = "♠A"
 
 [node name="Hurtbox" type="Area2D" parent="."]
 collision_layer = 0

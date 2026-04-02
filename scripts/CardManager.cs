@@ -30,7 +30,7 @@ public partial class CardManager : Node
         ResolveHud();
     }
 
-    public void NotifyEnemyKilled(CardDrop drop)
+    public void NotifyEnemyKilled(CardDrop drop, CardData? predefinedData = null)
     {
         TotalCardsFromEnemies += 1;
         _energyManager?.RestoreOnEnemyKill();
@@ -49,7 +49,7 @@ public partial class CardManager : Node
         ResolveHud();
         int targetSlot = _collectedCards.Count;
         Vector2 targetGlobalPos = _hud != null ? _hud.GetSlotGlobalAnchor(targetSlot) : drop.GlobalPosition;
-        CardData data = CreateRandomCardData();
+        CardData data = predefinedData ?? CreateRandomCardData();
 
         drop.BeginAutoCollect(this, data, targetSlot, targetGlobalPos);
     }

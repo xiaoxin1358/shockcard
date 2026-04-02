@@ -12,6 +12,11 @@ public partial class CardDrop : Area2D
 	private int _targetSlot;
 	private Vector2 _targetGlobal;
 	private Label _cardLabel;
+	private bool _hasPendingCollect;
+	private CardManager _pendingCardManager;
+	private CardData _pendingData;
+	private int _pendingTargetSlot;
+	private Vector2 _pendingTargetGlobal;
 
 	public override void _EnterTree()
 	{
@@ -22,9 +27,36 @@ public partial class CardDrop : Area2D
 	{
 		_cardLabel = GetNodeOrNull<Label>("CardLabel");
 		UpdateLabel();
+
+		if (_hasPendingCollect)
+		{
+			_hasPendingCollect = false;
+			BeginCollectInternal(_pendingCardManager, _pendingData, _pendingTargetSlot, _pendingTargetGlobal);
+		}
 	}
 
 	public void BeginAutoCollect(CardManager cardManager, CardData data, int targetSlot, Vector2 targetGlobalPosition)
+	{
+		if (_isCollecting)
+		{
+			return;
+		}
+
+		if (!IsInsideTree())
+		{
+			Data = data;
+			_pendingCardManager = cardManager;
+			_pendingData = data;
+			_pendingTargetSlot = targetSlot;
+			_pendingTargetGlobal = targetGlobalPosition;
+			_hasPendingCollect = true;
+			return;
+		}
+
+		BeginCollectInternal(cardManager, data, targetSlot, targetGlobalPosition);
+	}
+
+	private void BeginCollectInternal(CardManager cardManager, CardData data, int targetSlot, Vector2 targetGlobalPosition)
 	{
 		if (_isCollecting)
 		{
