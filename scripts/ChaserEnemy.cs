@@ -44,6 +44,8 @@ public partial class ChaserEnemy : RigidBody2D
 	public override void _Ready()
 	{
 		GravityScale = 0.0f;
+		LockRotation = true;
+		Rotation = 0.0f;
 		CanSleep = false;
 		Sleeping = false;
 		ContactMonitor = true;
@@ -87,10 +89,11 @@ public partial class ChaserEnemy : RigidBody2D
 			Vector2 forceDir = toPlayer.Normalized();
 			ApplyCentralForce(forceDir * Mathf.Max(1.0f, ChaseForce));
 			LinearVelocity = LinearVelocity.LimitLength(Mathf.Max(1.0f, MaxChaseSpeed));
-			if (FaceVelocityDirection && LinearVelocity.LengthSquared() > 1.0f)
-			{
-				Rotation = LinearVelocity.Angle();
-			}
+		}
+
+		if (FaceVelocityDirection)
+		{
+			UpdateFacingByVelocity();
 		}
 
 		PlayMovementAnimation();
@@ -271,6 +274,23 @@ public partial class ChaserEnemy : RigidBody2D
 		_isAttackAnimating = true;
 		_activeAttackAnimationName = attackAnimation;
 		_animatedSprite.Play(attackAnimation);
+	}
+
+	private void UpdateFacingByVelocity()
+	{
+		if (_animatedSprite == null)
+		{
+			return;
+		}
+
+		const float flipThreshold = 1.0f;
+		if (Mathf.Abs(LinearVelocity.X) <= flipThreshold)
+		{
+			return;
+		}
+
+		// Keep character upright and only mirror sprite horizontally.
+		_animatedSprite.FlipH = LinearVelocity.X < 0.0f;
 	}
 
 	private string ResolveAttackAnimationName()
