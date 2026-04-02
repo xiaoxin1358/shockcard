@@ -23,6 +23,15 @@ public partial class ChaserEnemy : RigidBody2D
 	[Export] public string IdleAnimationName = "idle";
 	[Export] public string RunAnimationName = "run";
 	[Export] public string AttackAnimationName = "attack";
+	[Export] public string ExplosionTexturePath = "res://Tiny Swords/Tiny Swords (Free Pack)/Particle FX/Explosion_01.png";
+	[Export] public string ExplosionAnimationName = "explode";
+	[Export] public int ExplosionFrameWidth = 192;
+	[Export] public int ExplosionFrameHeight = 192;
+	[Export] public int ExplosionFrameCount = 8;
+	[Export] public float ExplosionAnimationSpeed = 16.0f;
+	[Export] public Vector2 ExplosionScale = new Vector2(0.8f, 0.8f);
+	[Export] public string DeathSfxPath = "res://sorces/被砍.mp3";
+	[Export] public float DeathSfxVolumeDb = -4.0f;
 	[Export] public int BoxSize = 40;
 	[Export] public Color BodyColor = new Color(0.95f, 0.28f, 0.2f, 1.0f);
 	[Export] public Color OutlineColor = new Color(1.0f, 0.85f, 0.85f, 1.0f);
@@ -35,6 +44,8 @@ public partial class ChaserEnemy : RigidBody2D
 	private readonly List<SpriteFrames> _variantFrames = new();
 	private bool _isAttackAnimating;
 	private string _activeAttackAnimationName = string.Empty;
+	private SpriteFrames _explosionFrames;
+	private bool _isDying;
 
 	public override void _EnterTree()
 	{
@@ -54,6 +65,7 @@ public partial class ChaserEnemy : RigidBody2D
 
 		_energyManager = GetTree().GetFirstNodeInGroup("energy_manager") as EnergyManager;
 		_animatedSprite = GetNodeOrNull<AnimatedSprite2D>(AnimatedSpritePath);
+		_explosionFrames = BuildExplosionFrames();
 		CacheVariantFrames();
 		if (_animatedSprite != null)
 		{
@@ -76,6 +88,11 @@ public partial class ChaserEnemy : RigidBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
+		if (_isDying)
+		{
+			return;
+		}
+
 		Sleeping = false;
 		ResolvePlayerRef();
 		if (_player == null)
@@ -165,6 +182,11 @@ public partial class ChaserEnemy : RigidBody2D
 
 	private void OnBodyEntered(Node body)
 	{
+		if (_isDying)
+		{
+			return;
+		}
+
 		if (body is not Node2D playerNode || !body.IsInGroup("player"))
 		{
 			return;
@@ -173,7 +195,7 @@ public partial class ChaserEnemy : RigidBody2D
 		float playerSpeed = GetPlayerVelocity(playerNode).Length();
 		if (playerSpeed >= DestroyByPlayerSpeed)
 		{
-			QueueFree();
+			StartDeathSequence();
 			return;
 		}
 
@@ -276,6 +298,75 @@ public partial class ChaserEnemy : RigidBody2D
 		_animatedSprite.Play(attackAnimation);
 	}
 
+	private void StartDeathSequence()
+	{
+		if (_isDying)
+		{
+			return;
+		}
+
+		_isDying = true;
+		PlayDeathSfx();
+		SetDeferred("sleeping", true);
+		SetDeferred("linear_velocity", Vector2.Zero);
+		SetDeferred("freeze", true);
+		SetDeferred("collision_layer", 0u);
+		SetDeferred("collision_mask", 0u);
+		if (_animatedSprite != null)
+		{
+			_animatedSprite.Visible = false;
+		}
+
+		if (_explosionFrames == null)
+		{
+			CallDeferred(Node.MethodName.QueueFree);
+			return;
+		}
+
+		var explosion = new AnimatedSprite2D();
+		explosion.SpriteFrames = _explosionFrames;
+		explosion.Animation = ExplosionAnimationName;
+		explosion.Scale = ExplosionScale;
+		explosion.ZIndex = 200;
+		explosion.Position = Vector2.Zero;
+		explosion.AnimationFinished += OnDeathExplosionFinished;
+		AddChild(explosion);
+		explosion.Play(ExplosionAnimationName);
+	}
+
+	private void OnDeathExplosionFinished()
+	{
+		QueueFree();
+	}
+
+	private void PlayDeathSfx()
+	{
+		if (string.IsNullOrEmpty(DeathSfxPath))
+		{
+			return;
+		}
+
+		AudioStream stream = GD.Load<AudioStream>(DeathSfxPath);
+		if (stream == null)
+		{
+			return;
+		}
+
+		Node parent = GetTree().CurrentScene ?? GetParent();
+		if (parent == null)
+		{
+			return;
+		}
+
+		var player = new AudioStreamPlayer2D();
+		player.Stream = stream;
+		player.VolumeDb = DeathSfxVolumeDb;
+		player.GlobalPosition = GlobalPosition;
+		player.Finished += player.QueueFree;
+		parent.AddChild(player);
+		player.Play();
+	}
+
 	private void UpdateFacingByVelocity()
 	{
 		if (_animatedSprite == null)
@@ -324,6 +415,51 @@ public partial class ChaserEnemy : RigidBody2D
 		}
 
 		return string.Empty;
+	}
+
+	private SpriteFrames BuildExplosionFrames()
+	{
+		if (string.IsNullOrEmpty(ExplosionTexturePath))
+		{
+			return null;
+		}
+
+		Texture2D texture = GD.Load<Texture2D>(ExplosionTexturePath);
+		if (texture == null)
+		{
+			return null;
+		}
+
+		int frameW = Mathf.Max(1, ExplosionFrameWidth);
+		int frameH = Mathf.Max(1, ExplosionFrameHeight);
+		int columns = Mathf.Max(1, texture.GetWidth() / frameW);
+		int rows = Mathf.Max(1, texture.GetHeight() / frameH);
+		int availableFrames = columns * rows;
+		int frameCount = ExplosionFrameCount > 0
+			? Mathf.Clamp(ExplosionFrameCount, 1, availableFrames)
+			: availableFrames;
+
+		var frames = new SpriteFrames();
+		frames.AddAnimation(ExplosionAnimationName);
+		frames.SetAnimationLoop(ExplosionAnimationName, false);
+		frames.SetAnimationSpeed(ExplosionAnimationName, Mathf.Max(1.0f, ExplosionAnimationSpeed));
+
+		for (int i = 0; i < frameCount; i++)
+		{
+			int col = i % columns;
+			int row = i / columns;
+			if (row >= rows)
+			{
+				break;
+			}
+
+			var atlas = new AtlasTexture();
+			atlas.Atlas = texture;
+			atlas.Region = new Rect2(col * frameW, row * frameH, frameW, frameH);
+			frames.AddFrame(ExplosionAnimationName, atlas);
+		}
+
+		return frames;
 	}
 
 	private void OnAnimationFinished()

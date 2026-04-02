@@ -13,6 +13,10 @@ public partial class GameManager : Node
 
 	[Export] public bool LoseWhenEnergyEmpty = true;
 	[Export] public float LoseEnergyThreshold = 10.0f;
+	[Export] public string LoseSfxPath = "res://sorces/小剧场笑声综艺音效.mp3";
+	[Export] public float LoseSfxVolumeDb = -4.0f;
+	[Export] public string VictorySfxPath = "res://sorces/胜利欢呼.mp3";
+	[Export] public float VictorySfxVolumeDb = -4.0f;
 
 	public GameResultState CurrentState { get; private set; } = GameResultState.Running;
 
@@ -78,6 +82,7 @@ public partial class GameManager : Node
 		}
 
 		CurrentState = GameResultState.Lost;
+		PlayLoseSfx();
 		EmitSignal(SignalName.GameStateChanged, (int)CurrentState);
 		EmitSignal(SignalName.GameLost);
 		_hud?.ShowGameResult("YOU LOSE!");
@@ -91,9 +96,66 @@ public partial class GameManager : Node
 		}
 
 		CurrentState = GameResultState.Won;
+		PlayVictorySfx();
 		EmitSignal(SignalName.GameStateChanged, (int)CurrentState);
 		EmitSignal(SignalName.GameWon);
 		_hud?.ShowGameResult("YOU WIN!");
+	}
+
+	private void PlayVictorySfx()
+	{
+		if (string.IsNullOrEmpty(VictorySfxPath))
+		{
+			return;
+		}
+
+		AudioStream stream = GD.Load<AudioStream>(VictorySfxPath);
+		if (stream == null)
+		{
+			return;
+		}
+
+		Node parent = GetTree().CurrentScene ?? GetParent();
+		if (parent == null)
+		{
+			return;
+		}
+
+		var sfxPlayer = new AudioStreamPlayer();
+		sfxPlayer.Stream = stream;
+		sfxPlayer.VolumeDb = VictorySfxVolumeDb;
+		sfxPlayer.Bus = "Master";
+		sfxPlayer.Finished += sfxPlayer.QueueFree;
+		parent.AddChild(sfxPlayer);
+		sfxPlayer.Play();
+	}
+
+	private void PlayLoseSfx()
+	{
+		if (string.IsNullOrEmpty(LoseSfxPath))
+		{
+			return;
+		}
+
+		AudioStream stream = GD.Load<AudioStream>(LoseSfxPath);
+		if (stream == null)
+		{
+			return;
+		}
+
+		Node parent = GetTree().CurrentScene ?? GetParent();
+		if (parent == null)
+		{
+			return;
+		}
+
+		var sfxPlayer = new AudioStreamPlayer();
+		sfxPlayer.Stream = stream;
+		sfxPlayer.VolumeDb = LoseSfxVolumeDb;
+		sfxPlayer.Bus = "Master";
+		sfxPlayer.Finished += sfxPlayer.QueueFree;
+		parent.AddChild(sfxPlayer);
+		sfxPlayer.Play();
 	}
 
 	public void RequestRestart()

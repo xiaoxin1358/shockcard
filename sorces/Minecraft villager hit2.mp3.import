@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cw44oysrb2168"
+path="res://.godot/imported/Minecraft villager hit2.mp3-40e087d78791390f99ec84540a781017.mp3str"
+
+[deps]
+
+source_file="res://sorces/Minecraft villager hit2.mp3"
+dest_files=["res://.godot/imported/Minecraft villager hit2.mp3-40e087d78791390f99ec84540a781017.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

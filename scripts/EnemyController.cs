@@ -6,6 +6,8 @@ public partial class EnemyController : CharacterBody2D
 	[Export] public float PatrolSpeed = 70.0f;
 	[Export] public float PatrolHalfDistance = 48.0f;
 	[Export] public PackedScene CardDropScene;
+	[Export] public string DeathSfxPath = "res://sorces/Minecraft villager hit2.mp3";
+	[Export] public float DeathSfxVolumeDb = -4.0f;
 
 	private Area2D _hurtbox;
 	private Marker2D _dropAnchor;
@@ -104,9 +106,38 @@ public partial class EnemyController : CharacterBody2D
 	private void DieAndDropCard()
 	{
 		_isDead = true;
+		PlayDeathSfx();
 		CardDrop drop = SpawnCardDrop();
 		_cardManager?.NotifyEnemyKilled(drop, _debugCardData);
 		QueueFree();
+	}
+
+	private void PlayDeathSfx()
+	{
+		if (string.IsNullOrEmpty(DeathSfxPath))
+		{
+			return;
+		}
+
+		AudioStream stream = GD.Load<AudioStream>(DeathSfxPath);
+		if (stream == null)
+		{
+			return;
+		}
+
+		Node parent = GetTree().CurrentScene ?? GetParent();
+		if (parent == null)
+		{
+			return;
+		}
+
+		var sfxPlayer = new AudioStreamPlayer();
+		sfxPlayer.Stream = stream;
+		sfxPlayer.VolumeDb = DeathSfxVolumeDb;
+		sfxPlayer.Bus = "Master";
+		sfxPlayer.Finished += sfxPlayer.QueueFree;
+		parent.AddChild(sfxPlayer);
+		sfxPlayer.Play();
 	}
 
 	private CardData CreateRandomCardData()
