@@ -5,6 +5,9 @@ public partial class SpawnManager : Node
 {
 	[Export] public PackedScene EnemyScene;
 	[Export] public PackedScene ChaserEnemyScene;
+	[Export] public PackedScene ChaserArcherScene;
+	[Export] public PackedScene ChaserLancerScene;
+	[Export] public PackedScene ChaserPawnScene;
 	[Export] public PackedScene ObstacleScene;
 
 	[Export] public NodePath EnemiesContainerPath = "Runtime/Enemies";
@@ -37,6 +40,7 @@ public partial class SpawnManager : Node
 
 	public override void _Ready()
 	{
+		EnsureChaserScenesLoaded();
 		ClearEnemies();
 		SpawnRuntimeCombatants();
 	}
@@ -252,7 +256,8 @@ public partial class SpawnManager : Node
 
 	public void SpawnSingleChaserEnemyRandom()
 	{
-		if (ChaserEnemyScene == null)
+		PackedScene selectedChaserScene = PickRandomChaserScene();
+		if (selectedChaserScene == null)
 		{
 			return;
 		}
@@ -268,7 +273,8 @@ public partial class SpawnManager : Node
 			return;
 		}
 
-		Node chaserNode = ChaserEnemyScene.Instantiate();
+		Node chaserNode = selectedChaserScene.Instantiate();
+
 		if (chaserNode is Node2D chaser2D)
 		{
 			float halfX = Mathf.Max(24.0f, RandomSpawnHalfExtents.X - RandomSpawnEdgePadding);
@@ -355,6 +361,53 @@ public partial class SpawnManager : Node
 		var marker = new Marker2D();
 		marker.Position = position;
 		return marker;
+	}
+
+	private void EnsureChaserScenesLoaded()
+	{
+		if (ChaserArcherScene == null)
+		{
+			ChaserArcherScene = GD.Load<PackedScene>("res://scenes/ChaserArcher.tscn");
+		}
+
+		if (ChaserLancerScene == null)
+		{
+			ChaserLancerScene = GD.Load<PackedScene>("res://scenes/ChaserLancer.tscn");
+		}
+
+		if (ChaserPawnScene == null)
+		{
+			ChaserPawnScene = GD.Load<PackedScene>("res://scenes/ChaserPawn.tscn");
+		}
+	}
+
+	private PackedScene PickRandomChaserScene()
+	{
+		EnsureChaserScenesLoaded();
+
+		var candidates = new List<PackedScene>(3);
+		if (ChaserArcherScene != null)
+		{
+			candidates.Add(ChaserArcherScene);
+		}
+
+		if (ChaserLancerScene != null)
+		{
+			candidates.Add(ChaserLancerScene);
+		}
+
+		if (ChaserPawnScene != null)
+		{
+			candidates.Add(ChaserPawnScene);
+		}
+
+		if (candidates.Count == 0)
+		{
+			return ChaserEnemyScene;
+		}
+
+		int index = (int)(GD.Randi() % (uint)candidates.Count);
+		return candidates[index];
 	}
 
 	private int CountChaserEnemies(Node enemiesContainer)

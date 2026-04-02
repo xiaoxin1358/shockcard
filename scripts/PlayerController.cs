@@ -29,6 +29,12 @@ public partial class PlayerController : CharacterBody2D
 	[Export] public float ZoomLerpSpeed = 6.0f;
 	[Export] public float FollowSmoothingSpeed = 12.0f;
 	[Export] public Vector2 MapHalfExtents = new Vector2(500.0f, 500.0f);
+	[Export] public NodePath AnimatedSpritePath = "AnimatedSprite2D";
+	[Export] public float RunAnimSpeedThreshold = 40.0f;
+	[Export] public string IdleAnimationName = "idle";
+	[Export] public string RunAnimationName = "run";
+	[Export] public string AttackAnimationNameA = "attack1";
+	[Export] public string AttackAnimationNameB = "attack2";
 
 	public float LastImpactStrength { get; private set; }
 	public string CurrentStateName => _state.ToString();
@@ -46,9 +52,12 @@ public partial class PlayerController : CharacterBody2D
 	private EnergyManager _energyManager;
 	private Camera2D _camera;
 	private GameManager _gameManager;
+	private AnimatedSprite2D _animatedSprite;
 	private Vector2 _dragStartGlobal;
 	private Vector2 _cachedDragVector;
 	private float _damageCooldownLeft;
+	private bool _isAttackAnimating;
+	private readonly RandomNumberGenerator _animRng = new();
 
 	public override void _Ready()
 	{
@@ -68,6 +77,13 @@ public partial class PlayerController : CharacterBody2D
 
 		_energyManager = GetTree().GetFirstNodeInGroup("energy_manager") as EnergyManager;
 		_gameManager = GetTree().GetFirstNodeInGroup("game_manager") as GameManager;
+		_animatedSprite = GetNodeOrNull<AnimatedSprite2D>(AnimatedSpritePath);
+		if (_animatedSprite != null)
+		{
+			_animatedSprite.AnimationFinished += OnAnimationFinished;
+			PlayIdleAnimation();
+		}
+
 		ResetHp();
 		SetupCamera();
 	}
@@ -124,6 +140,8 @@ public partial class PlayerController : CharacterBody2D
 				_state = MoveState.Idle;
 			}
 		}
+
+		UpdateMovementAnimation();
 
 		UpdateCamera(dt);
 	}
@@ -257,6 +275,12 @@ public partial class PlayerController : CharacterBody2D
 		for (int i = 0; i < collisionCount; i++)
 		{
 			KinematicCollision2D collision = GetSlideCollision(i);
+			Node collider = collision.GetCollider() as Node;
+			if (collider != null && collider.IsInGroup("enemy"))
+			{
+				PlayAttackAnimation();
+			}
+
 			Vector2 normal = collision.GetNormal();
 
 			Vector2 tangentComponent = adjustedVelocity.Slide(normal);
@@ -271,6 +295,90 @@ public partial class PlayerController : CharacterBody2D
 		}
 
 		Velocity = adjustedVelocity.LimitLength(MaxSpeed);
+	}
+
+	private void UpdateMovementAnimation()
+	{
+		if (_animatedSprite == null || _isAttackAnimating)
+		{
+			return;
+		}
+
+		if (Velocity.Length() >= RunAnimSpeedThreshold)
+		{
+			if (_animatedSprite.Animation != RunAnimationName)
+			{
+				_animatedSprite.Play(RunAnimationName);
+			}
+		}
+		else
+		{
+			if (_animatedSprite.Animation != IdleAnimationName)
+			{
+				_animatedSprite.Play(IdleAnimationName);
+			}
+		}
+	}
+
+	private void PlayIdleAnimation()
+	{
+		if (_animatedSprite == null)
+		{
+			return;
+		}
+
+		if (_animatedSprite.Animation != IdleAnimationName)
+		{
+			_animatedSprite.Play(IdleAnimationName);
+		}
+	}
+
+	private void PlayAttackAnimation()
+	{
+		if (_animatedSprite == null)
+		{
+			return;
+		}
+
+		if (!_animatedSprite.SpriteFrames.HasAnimation(AttackAnimationNameA) && !_animatedSprite.SpriteFrames.HasAnimation(AttackAnimationNameB))
+		{
+			return;
+		}
+
+		if (_isAttackAnimating)
+		{
+			return;
+		}
+
+		bool hasAttackA = _animatedSprite.SpriteFrames.HasAnimation(AttackAnimationNameA);
+		bool hasAttackB = _animatedSprite.SpriteFrames.HasAnimation(AttackAnimationNameB);
+		string attackName;
+
+		if (hasAttackA && hasAttackB)
+		{
+			attackName = _animRng.Randf() < 0.5f ? AttackAnimationNameA : AttackAnimationNameB;
+		}
+		else
+		{
+			attackName = hasAttackA ? AttackAnimationNameA : AttackAnimationNameB;
+		}
+
+		_isAttackAnimating = true;
+		_animatedSprite.Play(attackName);
+	}
+
+	private void OnAnimationFinished()
+	{
+		if (_animatedSprite == null)
+		{
+			return;
+		}
+
+		if (_animatedSprite.Animation == AttackAnimationNameA || _animatedSprite.Animation == AttackAnimationNameB)
+		{
+			_isAttackAnimating = false;
+			UpdateMovementAnimation();
+		}
 	}
 
 	private void UpdateGuide(Vector2 dragVector)
