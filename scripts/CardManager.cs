@@ -35,6 +35,11 @@ public partial class CardManager : Node
         TotalCardsFromEnemies += 1;
         _energyManager?.RestoreOnEnemyKill();
 
+        if (_collectedCards.Count >= MaxCollectedCards)
+        {
+            AutoSettleCurrentHand();
+        }
+
         if (drop == null)
         {
             return;
@@ -84,6 +89,16 @@ public partial class CardManager : Node
         return HasSettlementResult ? LastSettlementResult.DamageMultiplier : 1.0f;
     }
 
+    public void ResetCards()
+    {
+        _collectedCards.Clear();
+        HasSettlementResult = false;
+        LastSettlementResult = default;
+
+        ResolveHud();
+        _hud?.OnCardsReset(MaxCollectedCards);
+    }
+
     private void AutoSettleCurrentHand()
     {
         if (_collectedCards.Count != MaxCollectedCards)
@@ -98,21 +113,10 @@ public partial class CardManager : Node
         GD.Print("[Settlement] " + result.HandName + " x" + result.DamageMultiplier.ToString("0.00"));
         EmitSignal(SignalName.HandSettled, result.HandName, result.DamageMultiplier);
 
-        var keptCards = new List<CardData>();
-        for (int i = 0; i < result.WinningCardIndices.Length; i++)
-        {
-            int index = result.WinningCardIndices[i];
-            if (index >= 0 && index < _collectedCards.Count)
-            {
-                keptCards.Add(_collectedCards[index]);
-            }
-        }
-
         ResolveHud();
-        _hud?.OnHandSettled(result, keptCards, MaxCollectedCards);
+        _hud?.OnHandSettled(result, System.Array.Empty<CardData>(), MaxCollectedCards);
 
         _collectedCards.Clear();
-        _collectedCards.AddRange(keptCards);
     }
 
     private CardData CreateRandomCardData()

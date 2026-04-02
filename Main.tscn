@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dhx5ta1syuiou" path="res://scenes/Player.tscn" id="2_player"]
 [ext_resource type="Texture2D" uid="uid://bf5vplkv4m2a1" path="res://kenney_tiny-town/Tilemap/tilemap_packed.png" id="2_sc1dx"]
 [ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="3_enemy"]
-[ext_resource type="PackedScene" path="res://scenes/Obstacle.tscn" id="4_obstacle"]
+[ext_resource type="PackedScene" uid="uid://rhwly7k8o3ps" path="res://scenes/Obstacle.tscn" id="4_obstacle"]
 [ext_resource type="PackedScene" path="res://scenes/Boss.tscn" id="5_boss"]
 [ext_resource type="PackedScene" path="res://ui/HUD.tscn" id="6_hud"]
 [ext_resource type="Script" uid="uid://dd1g8calhq1fc" path="res://scripts/MapResetManager.cs" id="7_reset"]
@@ -259,7 +259,7 @@ script = ExtResource("9_spawn")
 EnemyScene = ExtResource("3_enemy")
 ChaserEnemyScene = ExtResource("16_chaser")
 ObstacleScene = ExtResource("4_obstacle")
-ChaserSpawnIntervalSec = 5.0
+ChaserSpawnIntervalSec = 10.0
 
 [node name="EnergyManager" type="Node" parent="Systems" unique_id=561743859]
 script = ExtResource("10_energy")

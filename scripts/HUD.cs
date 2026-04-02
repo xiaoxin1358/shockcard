@@ -11,6 +11,7 @@ public partial class HUD : Control
 	private Label _debugText;
 	private Control _resultPanel;
 	private Label _resultText;
+	private Button _restartButton;
 
 	public override void _EnterTree()
 	{
@@ -26,7 +27,13 @@ public partial class HUD : Control
 		_debugPanel = GetNodeOrNull<Control>("DebugPanel");
 		_debugText = GetNodeOrNull<Label>("DebugPanel/DebugText");
 		_resultPanel = GetNodeOrNull<Control>("ResultPanel");
-		_resultText = GetNodeOrNull<Label>("ResultPanel/ResultText");
+		_resultText = GetNodeOrNull<Label>("ResultPanel/ResultContent/ResultText");
+		_restartButton = GetNodeOrNull<Button>("ResultPanel/ResultContent/RestartButton");
+
+		if (_restartButton != null)
+		{
+			_restartButton.Pressed += OnRestartPressed;
+		}
 
 		EnergyManager energyManager = GetTree().GetFirstNodeInGroup("energy_manager") as EnergyManager;
 		_energyUi?.BindEnergyManager(energyManager);
@@ -82,6 +89,11 @@ public partial class HUD : Control
 		_cardDisplayUi?.OnHandSettled(result, keptCards, maxSlots);
 	}
 
+	public void OnCardsReset(int maxSlots)
+	{
+		_cardDisplayUi?.ResetDisplay(maxSlots);
+	}
+
 	public void ShowGameResult(string text)
 	{
 		if (_resultPanel == null || _resultText == null)
@@ -100,5 +112,11 @@ public partial class HUD : Control
 		{
 			_resultPanel.Visible = false;
 		}
+	}
+
+	private void OnRestartPressed()
+	{
+		GameManager gameManager = GetTree().GetFirstNodeInGroup("game_manager") as GameManager;
+		gameManager?.RequestRestart();
 	}
 }

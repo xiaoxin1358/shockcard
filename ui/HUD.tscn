@@ -179,10 +179,19 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -260.0
-offset_top = -10.0
+offset_top = -56.0
 offset_right = 260.0
-offset_bottom = 44.0
+offset_bottom = 84.0
 
-[node name="ResultText" type="Label" parent="ResultPanel"]
+[node name="ResultContent" type="VBoxContainer" parent="ResultPanel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="ResultText" type="Label" parent="ResultPanel/ResultContent"]
 text = "Result"
 horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="ResultPanel/ResultContent"]
+custom_minimum_size = Vector2(180, 38)
+layout_mode = 2
+text = "RESTART"

@@ -73,6 +73,17 @@ public partial class CardDisplayUI : VBoxContainer
 		refreshTimer.Timeout += () => { RefreshCardSlots(keptCards, maxSlots); };
 	}
 
+	public void ResetDisplay(int maxSlots)
+	{
+		if (_settlementPanel != null)
+		{
+			_settlementPanel.Visible = false;
+			_settlementPanel.Modulate = new Color(1, 1, 1, 1);
+		}
+
+		RefreshCardSlots(System.Array.Empty<CardData>(), maxSlots);
+	}
+
 	private void CacheCardSlots()
 	{
 		_slotRoots.Clear();
