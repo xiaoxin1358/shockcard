@@ -280,6 +280,7 @@ script = ExtResource("13_game")
 [node name="FeedbackManager" type="Node" parent="Systems" unique_id=1959251253]
 script = ExtResource("14_feedback")
 BossHitExplosionVolumeDb = -12.0
+BossHitKeyThreshold = 0.9
 BossHitCameraZoomOut = 0.6000000000000001
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=701151324]
