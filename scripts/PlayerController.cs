@@ -29,6 +29,7 @@ public partial class PlayerController : CharacterBody2D
 	[Export] public float DefaultZoom = 0.7f;
 	[Export] public float SpeedForHighZoom = 1200.0f;
 	[Export] public float ZoomLerpSpeed = 6.0f;
+	[Export] public float BossHitZoomLerpSpeed = 10.0f;
 	[Export] public float FollowSmoothingSpeed = 12.0f;
 	[Export] public Vector2 MapHalfExtents = new Vector2(500.0f, 500.0f);
 	[Export] public NodePath AnimatedSpritePath = "AnimatedSprite2D";
@@ -60,6 +61,10 @@ public partial class PlayerController : CharacterBody2D
 	private float _damageCooldownLeft;
 	private bool _isAttackAnimating;
 	private readonly RandomNumberGenerator _animRng = new();
+	private float _bossHitZoomOverrideLeft;
+	private float _bossHitZoomOverrideTarget;
+	private float _bossHitZoomReturnTarget;
+	private bool _bossHitZoomRecovering;
 
 	public override void _Ready()
 	{
@@ -176,6 +181,33 @@ public partial class PlayerController : CharacterBody2D
 		}
 	}
 
+	public void TriggerBossHitCameraZoomOut(float targetZoom, float durationSec)
+	{
+		if (!EnableCameraControl || _camera == null)
+		{
+			return;
+		}
+
+		float maxZoomOutTarget = Mathf.Max(0.11f, _camera.Zoom.X - 0.01f);
+		float clampedTarget = Mathf.Clamp(targetZoom, 0.1f, maxZoomOutTarget);
+		float clampedDuration = Mathf.Max(0.05f, durationSec);
+
+		_bossHitZoomOverrideTarget = clampedTarget;
+		_bossHitZoomOverrideLeft = Mathf.Max(_bossHitZoomOverrideLeft, clampedDuration);
+
+		if (EnableDynamicZoom)
+		{
+			float t = Mathf.Clamp(Velocity.Length() / Mathf.Max(1.0f, SpeedForHighZoom), 0.0f, 1.0f);
+			_bossHitZoomReturnTarget = Mathf.Lerp(ZoomAtIdle, ZoomAtHighSpeed, t);
+			_bossHitZoomRecovering = false;
+		}
+		else
+		{
+			_bossHitZoomReturnTarget = _camera.Zoom.X;
+			_bossHitZoomRecovering = true;
+		}
+	}
+
 	private void SetupCamera()
 	{
 		_camera = GetNodeOrNull<Camera2D>("Camera2D");
@@ -208,15 +240,40 @@ public partial class PlayerController : CharacterBody2D
 
 		_camera.PositionSmoothingSpeed = FollowSmoothingSpeed;
 
-		if (!EnableDynamicZoom)
+		float targetZoom = _camera.Zoom.X;
+		bool hasZoomTarget = false;
+
+		if (EnableDynamicZoom)
+		{
+			float t = Mathf.Clamp(Velocity.Length() / Mathf.Max(1.0f, SpeedForHighZoom), 0.0f, 1.0f);
+			targetZoom = Mathf.Lerp(ZoomAtIdle, ZoomAtHighSpeed, t);
+			hasZoomTarget = true;
+		}
+
+		if (_bossHitZoomOverrideLeft > 0.0f)
+		{
+			_bossHitZoomOverrideLeft = Mathf.Max(0.0f, _bossHitZoomOverrideLeft - dt);
+			targetZoom = Mathf.Min(targetZoom, _bossHitZoomOverrideTarget);
+			hasZoomTarget = true;
+		}
+		else if (_bossHitZoomRecovering && !EnableDynamicZoom)
+		{
+			targetZoom = _bossHitZoomReturnTarget;
+			hasZoomTarget = true;
+			if (Mathf.Abs(_camera.Zoom.X - _bossHitZoomReturnTarget) <= 0.01f)
+			{
+				_bossHitZoomRecovering = false;
+			}
+		}
+
+		if (!hasZoomTarget)
 		{
 			return;
 		}
 
-		float t = Mathf.Clamp(Velocity.Length() / Mathf.Max(1.0f, SpeedForHighZoom), 0.0f, 1.0f);
-		float targetZoom = Mathf.Lerp(ZoomAtIdle, ZoomAtHighSpeed, t);
 		float currentZoom = _camera.Zoom.X;
-		float nextZoom = Mathf.Lerp(currentZoom, targetZoom, dt * ZoomLerpSpeed);
+		float lerpSpeed = _bossHitZoomOverrideLeft > 0.0f ? Mathf.Max(BossHitZoomLerpSpeed, ZoomLerpSpeed) : ZoomLerpSpeed;
+		float nextZoom = Mathf.Lerp(currentZoom, targetZoom, dt * lerpSpeed);
 		_camera.Zoom = new Vector2(nextZoom, nextZoom);
 	}
 

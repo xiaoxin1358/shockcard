@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://cfuigx8bxv2vw" path="res://scenes/Enemy.tscn" id="3_enemy"]
 [ext_resource type="PackedScene" uid="uid://rhwly7k8o3ps" path="res://scenes/Obstacle.tscn" id="4_obstacle"]
 [ext_resource type="PackedScene" uid="uid://b4kx4l624rovf" path="res://scenes/Boss.tscn" id="5_boss"]
-[ext_resource type="PackedScene" path="res://ui/HUD.tscn" id="6_hud"]
+[ext_resource type="PackedScene" uid="uid://ctrcg7sus6on1" path="res://ui/HUD.tscn" id="6_hud"]
 [ext_resource type="Script" uid="uid://dd1g8calhq1fc" path="res://scripts/MapResetManager.cs" id="7_reset"]
 [ext_resource type="Script" uid="uid://colduisgyk32x" path="res://scripts/RoundSettlementController.cs" id="8_round"]
 [ext_resource type="Script" uid="uid://cxs8ub81qqb6t" path="res://scripts/SpawnManager.cs" id="9_spawn"]
@@ -279,6 +279,8 @@ script = ExtResource("13_game")
 
 [node name="FeedbackManager" type="Node" parent="Systems" unique_id=1959251253]
 script = ExtResource("14_feedback")
+BossHitExplosionVolumeDb = -12.0
+BossHitCameraZoomOut = 0.6000000000000001
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=701151324]
 

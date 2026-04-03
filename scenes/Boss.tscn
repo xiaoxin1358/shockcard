@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://undu5dvtf8y6" path="res://scripts/BossController.cs" id="1_boss"]
 [ext_resource type="Texture2D" uid="uid://gome7jtj76yi" path="res://Tiny Swords/Tiny Swords (Free Pack)/Buildings/Red Buildings/Castle.png" id="2_6ig5k"]
+[ext_resource type="VideoStream" uid="uid://dq1temiuvkyps" path="res://sorces/boom.ogv" id="3_boom"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(260, 141)
@@ -46,3 +47,12 @@ position = Vector2(0, -48)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1961212671]
 texture = ExtResource("2_6ig5k")
+
+[node name="BossHitExplosionVideo" type="VideoStreamPlayer" parent="." unique_id=1587593272]
+offset_left = -170.0
+offset_top = -84.0
+offset_right = 1110.0
+offset_bottom = 636.0
+scale = Vector2(0.26, 0.26)
+mouse_filter = 2
+stream = ExtResource("3_boom")
