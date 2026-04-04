@@ -3,7 +3,6 @@
 [ext_resource type="Script" uid="uid://hwmiktu2f2f6" path="res://scripts/HUD.cs" id="1_hud"]
 [ext_resource type="Script" uid="uid://c0qgwcurp0rs7" path="res://scripts/EnergyBarUI.cs" id="2_energyui"]
 [ext_resource type="Script" uid="uid://da2putduqsxx0" path="res://scripts/CardDisplayUI.cs" id="3_cardui"]
-[ext_resource type="Script" uid="uid://b33y8aeexm1pl" path="res://scripts/BossHpBarUI.cs" id="4_bossui"]
 [ext_resource type="Texture2D" uid="uid://bm7s5flwiwiht" path="res://sorces/SBS - 2D Poker Pack/Top-Down/Cards/Spades-88x124.png" id="4_li43i"]
 [ext_resource type="Texture2D" uid="uid://dlb0h3vpkvo5t" path="res://sorces/SBS - 2D Poker Pack/Top-Down/Cards/Hearts-88x124.png" id="5_a33y5"]
 [ext_resource type="Script" uid="uid://d1wgn0wgb472s" path="res://scripts/PhaseHintUI.cs" id="5_phaseui"]
@@ -127,7 +126,6 @@ grow_horizontal = 2
 
 [node name="BossBarPanel" type="VBoxContainer" parent="BossTop" unique_id=1067908795]
 layout_mode = 2
-script = ExtResource("4_bossui")
 
 [node name="BossName" type="Label" parent="BossTop/BossBarPanel" unique_id=1498602330]
 layout_mode = 2
@@ -224,7 +222,16 @@ layout_mode = 2
 text = "Result"
 horizontal_alignment = 1
 
-[node name="RestartButton" type="Button" parent="ResultPanel/ResultContent" unique_id=39967758]
+[node name="ActionButtons" type="HBoxContainer" parent="ResultPanel/ResultContent" unique_id=39967758]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ContinueButton" type="Button" parent="ResultPanel/ResultContent/ActionButtons" unique_id=660117941]
 custom_minimum_size = Vector2(180, 38)
 layout_mode = 2
-text = "RESTART"
+text = "继续游戏"
+
+[node name="QuitButton" type="Button" parent="ResultPanel/ResultContent/ActionButtons" unique_id=1203641987]
+custom_minimum_size = Vector2(180, 38)
+layout_mode = 2
+text = "退出游戏"

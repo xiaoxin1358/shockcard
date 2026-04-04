@@ -5,13 +5,17 @@ public partial class HUD : Control
 {
 	private EnergyBarUI _energyUi;
 	private CardDisplayUI _cardDisplayUi;
-	private BossHpBarUI _bossHpBarUi;
+	private Label _bossName;
+	private TextureProgressBar _bossHpBar;
+	private Label _bossHpText;
+	private BossController _boundBoss;
 	private PhaseHintUI _phaseHintUi;
 	private Control _debugPanel;
 	private Label _debugText;
 	private Control _resultPanel;
 	private Label _resultText;
-	private Button _restartButton;
+	private Button _continueButton;
+	private Button _quitButton;
 
 	public override void _EnterTree()
 	{
@@ -22,17 +26,25 @@ public partial class HUD : Control
 	{
 		_energyUi = GetNodeOrNull<EnergyBarUI>("TopBar/EnergyPanel");
 		_cardDisplayUi = GetNodeOrNull<CardDisplayUI>("TopBar/DeckPanel");
-		_bossHpBarUi = GetNodeOrNull<BossHpBarUI>("BossTop/BossBarPanel");
+		_bossName = GetNodeOrNull<Label>("BossTop/BossBarPanel/BossName");
+		_bossHpBar = GetNodeOrNull<TextureProgressBar>("BossTop/BossBarPanel/BossHpBar");
+		_bossHpText = GetNodeOrNull<Label>("BossTop/BossBarPanel/BossHpText");
 		_phaseHintUi = GetNodeOrNull<PhaseHintUI>("PhaseBanner");
 		_debugPanel = GetNodeOrNull<Control>("DebugPanel");
 		_debugText = GetNodeOrNull<Label>("DebugPanel/DebugText");
 		_resultPanel = GetNodeOrNull<Control>("ResultPanel");
 		_resultText = GetNodeOrNull<Label>("ResultPanel/ResultContent/ResultText");
-		_restartButton = GetNodeOrNull<Button>("ResultPanel/ResultContent/RestartButton");
+		_continueButton = GetNodeOrNull<Button>("ResultPanel/ResultContent/ActionButtons/ContinueButton");
+		_quitButton = GetNodeOrNull<Button>("ResultPanel/ResultContent/ActionButtons/QuitButton");
 
-		if (_restartButton != null)
+		if (_continueButton != null)
 		{
-			_restartButton.Pressed += OnRestartPressed;
+			_continueButton.Pressed += OnContinuePressed;
+		}
+
+		if (_quitButton != null)
+		{
+			_quitButton.Pressed += OnQuitPressed;
 		}
 
 		EnergyManager energyManager = GetTree().GetFirstNodeInGroup("energy_manager") as EnergyManager;
@@ -65,8 +77,60 @@ public partial class HUD : Control
 
 	public void BindBoss(BossController boss)
 	{
-		_bossHpBarUi?.BindBoss(boss);
+		if (_boundBoss != null && IsInstanceValid(_boundBoss))
+		{
+			Callable hpChangedCallable = Callable.From<float, float>(OnBossHpChanged);
+			if (_boundBoss.IsConnected(BossController.SignalName.HpChanged, hpChangedCallable))
+			{
+				_boundBoss.Disconnect(BossController.SignalName.HpChanged, hpChangedCallable);
+			}
+		}
+
+		_boundBoss = boss;
+		if (_bossName != null)
+		{
+			_bossName.Text = "Boss HP";
+		}
+
+		if (_boundBoss == null)
+		{
+			if (_bossHpBar != null)
+			{
+				_bossHpBar.Value = 0.0f;
+			}
+
+			if (_bossHpText != null)
+			{
+				_bossHpText.Text = "0 / 0";
+			}
+
+			return;
+		}
+
+		Callable connectedCallable = Callable.From<float, float>(OnBossHpChanged);
+		if (!_boundBoss.IsConnected(BossController.SignalName.HpChanged, connectedCallable))
+		{
+			_boundBoss.Connect(BossController.SignalName.HpChanged, connectedCallable);
+		}
+
+		OnBossHpChanged(_boundBoss.CurrentHp, _boundBoss.MaxHp);
 		_phaseHintUi?.BindBoss(boss);
+	}
+
+	private void OnBossHpChanged(float currentHp, float maxHp)
+	{
+		if (_bossHpBar == null)
+		{
+			return;
+		}
+
+		_bossHpBar.MaxValue = maxHp;
+		_bossHpBar.Value = currentHp;
+
+		if (_bossHpText != null)
+		{
+			_bossHpText.Text = Mathf.CeilToInt(currentHp) + " / " + Mathf.CeilToInt(maxHp);
+		}
 	}
 
 	public Vector2 GetSlotGlobalAnchor(int slotIndex)
@@ -114,9 +178,14 @@ public partial class HUD : Control
 		}
 	}
 
-	private void OnRestartPressed()
+	private void OnContinuePressed()
 	{
 		GameManager gameManager = GetTree().GetFirstNodeInGroup("game_manager") as GameManager;
 		gameManager?.RequestRestart();
+	}
+
+	private void OnQuitPressed()
+	{
+		GetTree().Quit();
 	}
 }
