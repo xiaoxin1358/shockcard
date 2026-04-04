@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://ctrcg7sus6on1" path="res://ui/HUD.tscn" id="6_hud"]
 [ext_resource type="Script" uid="uid://dd1g8calhq1fc" path="res://scripts/MapResetManager.cs" id="7_reset"]
 [ext_resource type="Script" uid="uid://colduisgyk32x" path="res://scripts/RoundSettlementController.cs" id="8_round"]
+[ext_resource type="Resource" path="res://data/cards/buff_catalog.tres" id="19_buff_catalog"]
 [ext_resource type="Script" uid="uid://cxs8ub81qqb6t" path="res://scripts/SpawnManager.cs" id="9_spawn"]
 [ext_resource type="Script" uid="uid://bas27ap7ih5ge" path="res://scripts/EnergyManager.cs" id="10_energy"]
 [ext_resource type="Script" uid="uid://bio6ftw7rwhs5" path="res://scripts/CardManager.cs" id="11_card"]
@@ -256,6 +257,7 @@ script = ExtResource("7_reset")
 
 [node name="RoundSettlementController" type="Node" parent="Systems" unique_id=1019071734]
 script = ExtResource("8_round")
+BuffCatalog = ExtResource("19_buff_catalog")
 
 [node name="SpawnManager" type="Node" parent="Systems" unique_id=375721495]
 script = ExtResource("9_spawn")

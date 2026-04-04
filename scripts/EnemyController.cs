@@ -14,6 +14,7 @@ public partial class EnemyController : CharacterBody2D
 	private Label _cardText;
 	private Node _dropsRoot;
 	private CardManager _cardManager;
+	private GameplayEventBus _eventBus;
 	private FeedbackManager _feedback;
 	private readonly RandomNumberGenerator _rng = new();
 	private CardData _debugCardData;
@@ -100,16 +101,37 @@ public partial class EnemyController : CharacterBody2D
 		float speed = body is CharacterBody2D cb ? cb.Velocity.Length() : 0.0f;
 		_feedback?.AddEnemyHitFeedback(speed);
 
-		DieAndDropCard();
+		DieAndDropCard(speed);
 	}
 
-	private void DieAndDropCard()
+	public void DefeatByShockwave(float sourceSpeed)
+	{
+		if (_isDead)
+		{
+			return;
+		}
+
+		_feedback?.AddEnemyHitFeedback(sourceSpeed);
+		DieAndDropCard(sourceSpeed);
+	}
+
+	private void DieAndDropCard(float killerSpeed)
 	{
 		_isDead = true;
 		PlayDeathSfx();
+		ResolveEventBus();
+		_eventBus?.PublishEnemyKilled(this, GlobalPosition, killerSpeed);
 		CardDrop drop = SpawnCardDrop();
 		_cardManager?.NotifyEnemyKilled(drop, _debugCardData);
 		QueueFree();
+	}
+
+	private void ResolveEventBus()
+	{
+		if (_eventBus == null || !IsInstanceValid(_eventBus))
+		{
+			_eventBus = GetTree().GetFirstNodeInGroup("gameplay_event_bus") as GameplayEventBus;
+		}
 	}
 
 	private void PlayDeathSfx()

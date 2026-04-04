@@ -53,6 +53,7 @@ public partial class PlayerController : CharacterBody2D
 	private MoveState _state = MoveState.Idle;
 	private Line2D _dragGuide;
 	private EnergyManager _energyManager;
+	private GameplayEventBus _eventBus;
 	private Camera2D _camera;
 	private GameManager _gameManager;
 	private AnimatedSprite2D _animatedSprite;
@@ -208,6 +209,22 @@ public partial class PlayerController : CharacterBody2D
 		}
 	}
 
+	public void AddExternalImpulse(Vector2 impulse)
+	{
+		if (impulse.LengthSquared() <= 0.0001f)
+		{
+			return;
+		}
+
+		Velocity += impulse;
+		Velocity = Velocity.LimitLength(MaxSpeed);
+
+		if (_state == MoveState.Idle)
+		{
+			_state = MoveState.Sliding;
+		}
+	}
+
 	private void SetupCamera()
 	{
 		_camera = GetNodeOrNull<Camera2D>("Camera2D");
@@ -311,6 +328,9 @@ public partial class PlayerController : CharacterBody2D
 		Velocity += impulse;
 		Velocity = Velocity.LimitLength(MaxSpeed);
 		_state = MoveState.Sliding;
+
+		ResolveEventBus();
+		_eventBus?.PublishPlayerShoot(impulse, energyCost, Velocity);
 	}
 
 	private void ResolveSlideCollisions(Vector2 preMoveVelocity)
@@ -343,6 +363,9 @@ public partial class PlayerController : CharacterBody2D
 			}
 
 			Vector2 normal = collision.GetNormal();
+			ResolveEventBus();
+			_eventBus?.PublishCollision(collider, normal, impact, preMoveVelocity);
+
 			if (isWallCollider)
 			{
 				Vector2 bounceSource = collisionVelocity.LengthSquared() > 1.0f ? collisionVelocity : adjustedVelocity;
@@ -385,6 +408,14 @@ public partial class PlayerController : CharacterBody2D
 		}
 
 		Velocity = adjustedVelocity.LimitLength(MaxSpeed);
+	}
+
+	private void ResolveEventBus()
+	{
+		if (_eventBus == null || !IsInstanceValid(_eventBus))
+		{
+			_eventBus = GetTree().GetFirstNodeInGroup("gameplay_event_bus") as GameplayEventBus;
+		}
 	}
 
 	private static bool IsWallCollider(Node collider)

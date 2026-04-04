@@ -3,6 +3,12 @@ using System.Collections.Generic;
 
 public partial class HUD : Control
 {
+	[Signal]
+	public delegate void ContinueRequestedEventHandler();
+
+	[Signal]
+	public delegate void BuffChoiceSelectedEventHandler(int choiceIndex);
+
 	private EnergyBarUI _energyUi;
 	private CardDisplayUI _cardDisplayUi;
 	private Label _bossName;
@@ -16,6 +22,11 @@ public partial class HUD : Control
 	private Label _resultText;
 	private Button _continueButton;
 	private Button _quitButton;
+	private PanelContainer _buffChoicePanel;
+	private Label _buffChoiceTitle;
+	private VBoxContainer _buffChoiceList;
+	private readonly List<Button> _buffChoiceButtons = new();
+	private readonly List<BuffCardData> _shownChoices = new();
 
 	public override void _EnterTree()
 	{
@@ -55,6 +66,9 @@ public partial class HUD : Control
 
 		SetDebugVisible(false);
 		SetDebugText(string.Empty);
+
+		EnsureBuffChoiceUi();
+		HideBuffChoices();
 
 		ClearGameResult();
 	}
@@ -176,12 +190,141 @@ public partial class HUD : Control
 		{
 			_resultPanel.Visible = false;
 		}
+
+		HideBuffChoices();
+	}
+
+	public void ShowBuffChoices(IReadOnlyList<BuffCardData> choices)
+	{
+		EnsureBuffChoiceUi();
+		if (_buffChoicePanel == null || choices == null || choices.Count <= 0)
+		{
+			return;
+		}
+
+		_shownChoices.Clear();
+		for (int i = 0; i < choices.Count; i++)
+		{
+			if (choices[i] != null)
+			{
+				_shownChoices.Add(choices[i]);
+			}
+		}
+
+		if (_shownChoices.Count <= 0)
+		{
+			return;
+		}
+
+		if (_buffChoiceTitle != null)
+		{
+			_buffChoiceTitle.Text = "Choose One Buff Card";
+		}
+
+		for (int i = 0; i < _buffChoiceButtons.Count; i++)
+		{
+			Button button = _buffChoiceButtons[i];
+			if (button == null)
+			{
+				continue;
+			}
+
+			if (i < _shownChoices.Count)
+			{
+				BuffCardData card = _shownChoices[i];
+				button.Visible = true;
+				button.Disabled = false;
+				button.Text = card.DisplayName + "\n" + card.Description;
+			}
+			else
+			{
+				button.Visible = false;
+				button.Disabled = true;
+				button.Text = string.Empty;
+			}
+		}
+
+		_buffChoicePanel.Visible = true;
+		if (_resultPanel != null)
+		{
+			_resultPanel.Visible = false;
+		}
+	}
+
+	public void HideBuffChoices()
+	{
+		_shownChoices.Clear();
+		if (_buffChoicePanel != null)
+		{
+			_buffChoicePanel.Visible = false;
+		}
+	}
+
+	private void EnsureBuffChoiceUi()
+	{
+		if (_buffChoicePanel != null)
+		{
+			return;
+		}
+
+		_buffChoicePanel = new PanelContainer();
+		_buffChoicePanel.Name = "BuffChoicePanel";
+		_buffChoicePanel.SetAnchorsPreset(LayoutPreset.Center);
+		_buffChoicePanel.OffsetLeft = -260.0f;
+		_buffChoicePanel.OffsetTop = -170.0f;
+		_buffChoicePanel.OffsetRight = 260.0f;
+		_buffChoicePanel.OffsetBottom = 170.0f;
+		_buffChoicePanel.Visible = false;
+		AddChild(_buffChoicePanel);
+
+		var content = new VBoxContainer();
+		content.Name = "Content";
+		content.SetAnchorsPreset(LayoutPreset.FullRect);
+		content.OffsetLeft = 12.0f;
+		content.OffsetTop = 12.0f;
+		content.OffsetRight = -12.0f;
+		content.OffsetBottom = -12.0f;
+		content.AddThemeConstantOverride("separation", 10);
+		_buffChoicePanel.AddChild(content);
+
+		_buffChoiceTitle = new Label();
+		_buffChoiceTitle.Name = "Title";
+		_buffChoiceTitle.Text = "Choose One Buff Card";
+		_buffChoiceTitle.HorizontalAlignment = HorizontalAlignment.Center;
+		content.AddChild(_buffChoiceTitle);
+
+		_buffChoiceList = new VBoxContainer();
+		_buffChoiceList.Name = "ChoiceList";
+		_buffChoiceList.AddThemeConstantOverride("separation", 8);
+		content.AddChild(_buffChoiceList);
+
+		_buffChoiceButtons.Clear();
+		for (int i = 0; i < 3; i++)
+		{
+			var button = new Button();
+			button.CustomMinimumSize = new Vector2(0, 56);
+			button.AutowrapMode = TextServer.AutowrapMode.WordSmart;
+			button.Text = "Choice";
+			int capturedIndex = i;
+			button.Pressed += () => OnBuffChoiceButtonPressed(capturedIndex);
+			_buffChoiceList.AddChild(button);
+			_buffChoiceButtons.Add(button);
+		}
+	}
+
+	private void OnBuffChoiceButtonPressed(int index)
+	{
+		if (index < 0 || index >= _shownChoices.Count)
+		{
+			return;
+		}
+
+		EmitSignal(SignalName.BuffChoiceSelected, index);
 	}
 
 	private void OnContinuePressed()
 	{
-		GameManager gameManager = GetTree().GetFirstNodeInGroup("game_manager") as GameManager;
-		gameManager?.RequestRestart();
+		EmitSignal(SignalName.ContinueRequested);
 	}
 
 	private void OnQuitPressed()

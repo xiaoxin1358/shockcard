@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="BuffCardCatalog" load_steps=8 format=3]
+
+[ext_resource type="Script" path="res://scripts/BuffCardCatalog.cs" id="1_catalog"]
+[ext_resource type="Resource" path="res://data/cards/overload_propulsion.tres" id="2_card"]
+[ext_resource type="Resource" path="res://data/cards/energy_battery.tres" id="3_card"]
+[ext_resource type="Resource" path="res://data/cards/energy_recovery.tres" id="4_card"]
+[ext_resource type="Resource" path="res://data/cards/chain_shockwave.tres" id="5_card"]
+[ext_resource type="Resource" path="res://data/cards/low_friction_surface.tres" id="6_card"]
+
+[resource]
+script = ExtResource("1_catalog")
+Cards = Array[Resource]([ExtResource("2_card"), ExtResource("3_card"), ExtResource("4_card"), ExtResource("5_card"), ExtResource("6_card")])

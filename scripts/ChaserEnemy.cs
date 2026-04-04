@@ -38,6 +38,7 @@ public partial class ChaserEnemy : RigidBody2D
 
 	private Node2D _player;
 	private EnergyManager _energyManager;
+	private GameplayEventBus _eventBus;
 	private AnimatedSprite2D _animatedSprite;
 	private SpriteFrames _pendingVariantFrames;
 	private int _pendingVariantIndex = -1;
@@ -154,6 +155,11 @@ public partial class ChaserEnemy : RigidBody2D
 		SetVariantByIndex(index);
 	}
 
+	public void DefeatByShockwave(float sourceSpeed)
+	{
+		StartDeathSequence(sourceSpeed);
+	}
+
 	private void ResolvePlayerRef()
 	{
 		if (_player != null && IsInstanceValid(_player))
@@ -195,7 +201,7 @@ public partial class ChaserEnemy : RigidBody2D
 		float playerSpeed = GetPlayerVelocity(playerNode).Length();
 		if (playerSpeed >= DestroyByPlayerSpeed)
 		{
-			StartDeathSequence();
+			StartDeathSequence(playerSpeed);
 			return;
 		}
 
@@ -298,7 +304,7 @@ public partial class ChaserEnemy : RigidBody2D
 		_animatedSprite.Play(attackAnimation);
 	}
 
-	private void StartDeathSequence()
+	private void StartDeathSequence(float killerSpeed)
 	{
 		if (_isDying)
 		{
@@ -306,6 +312,8 @@ public partial class ChaserEnemy : RigidBody2D
 		}
 
 		_isDying = true;
+		ResolveEventBus();
+		_eventBus?.PublishEnemyKilled(this, GlobalPosition, killerSpeed);
 		PlayDeathSfx();
 		SetDeferred("sleeping", true);
 		SetDeferred("linear_velocity", Vector2.Zero);
@@ -415,6 +423,14 @@ public partial class ChaserEnemy : RigidBody2D
 		}
 
 		return string.Empty;
+	}
+
+	private void ResolveEventBus()
+	{
+		if (_eventBus == null || !IsInstanceValid(_eventBus))
+		{
+			_eventBus = GetTree().GetFirstNodeInGroup("gameplay_event_bus") as GameplayEventBus;
+		}
 	}
 
 	private SpriteFrames BuildExplosionFrames()
