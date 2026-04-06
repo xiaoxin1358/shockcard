@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="BuffCardData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BuffCardData" format=3 uid="uid://d3vlnqgexiaxq"]
 
-[ext_resource type="Script" path="res://scripts/BuffCardData.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://bdr5okmusrrhn" path="res://scripts/BuffCardData.cs" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -9,4 +9,3 @@ DisplayName = "能量回收"
 Description = "每次击杀敌人时，恢复能量。"
 EffectType = 3
 ValueA = 40.0
-ValueB = 0.0

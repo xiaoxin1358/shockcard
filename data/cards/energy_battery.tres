@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="BuffCardData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BuffCardData" format=3 uid="uid://i0nx0pi7ps5s"]
 
-[ext_resource type="Script" path="res://scripts/BuffCardData.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://bdr5okmusrrhn" path="res://scripts/BuffCardData.cs" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -9,4 +9,3 @@ DisplayName = "能量电池"
 Description = "每次新一局开始时，额外获得100点能量。"
 EffectType = 2
 ValueA = 100.0
-ValueB = 0.0

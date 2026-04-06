@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="BuffCardData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BuffCardData" format=3 uid="uid://dcoefmc2pw1x6"]
 
-[ext_resource type="Script" path="res://scripts/BuffCardData.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://bdr5okmusrrhn" path="res://scripts/BuffCardData.cs" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -9,4 +9,3 @@ DisplayName = "过载推进"
 Description = "拖拽推进力提高40%，由玩家施力事件触发。"
 EffectType = 1
 ValueA = 0.4
-ValueB = 0.0

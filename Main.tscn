@@ -9,7 +9,6 @@
 [ext_resource type="PackedScene" uid="uid://ctrcg7sus6on1" path="res://ui/HUD.tscn" id="6_hud"]
 [ext_resource type="Script" uid="uid://dd1g8calhq1fc" path="res://scripts/MapResetManager.cs" id="7_reset"]
 [ext_resource type="Script" uid="uid://colduisgyk32x" path="res://scripts/RoundSettlementController.cs" id="8_round"]
-[ext_resource type="Resource" path="res://data/cards/buff_catalog.tres" id="19_buff_catalog"]
 [ext_resource type="Script" uid="uid://cxs8ub81qqb6t" path="res://scripts/SpawnManager.cs" id="9_spawn"]
 [ext_resource type="Script" uid="uid://bas27ap7ih5ge" path="res://scripts/EnergyManager.cs" id="10_energy"]
 [ext_resource type="Script" uid="uid://bio6ftw7rwhs5" path="res://scripts/CardManager.cs" id="11_card"]
@@ -19,6 +18,7 @@
 [ext_resource type="Script" uid="uid://ix433bq6xrw1" path="res://scripts/Walls.cs" id="15_walls"]
 [ext_resource type="PackedScene" uid="uid://t002g8gyl2kp" path="res://scenes/Chaser.tscn" id="16_chaser"]
 [ext_resource type="AudioStream" uid="uid://qn8nhwkv0kkk" path="res://sorces/急如猛火.mp3" id="18_kjvhd"]
+[ext_resource type="Resource" path="res://data/cards/buff_catalog.tres" id="19_buff_catalog"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_kjvhd"]
 texture = ExtResource("2_sc1dx")

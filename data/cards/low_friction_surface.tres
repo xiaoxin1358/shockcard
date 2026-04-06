@@ -1,6 +1,6 @@
-[gd_resource type="Resource" script_class="BuffCardData" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="BuffCardData" format=3 uid="uid://b234xyygarkcs"]
 
-[ext_resource type="Script" path="res://scripts/BuffCardData.cs" id="1_script"]
+[ext_resource type="Script" uid="uid://bdr5okmusrrhn" path="res://scripts/BuffCardData.cs" id="1_script"]
 
 [resource]
 script = ExtResource("1_script")
@@ -9,4 +9,3 @@ DisplayName = "低摩擦表面"
 Description = "降低移动衰减，使滑行距离更远。"
 EffectType = 5
 ValueA = 0.7
-ValueB = 0.0
