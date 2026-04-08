@@ -1,7 +1,7 @@
 # Shockcard
 
 一个基于 Godot 4.6 + C# 的 2D 横版物理冲刺 Demo。
-
+![alt text](image.png)
 核心玩法是把“拖拽施力的动量手感”和“扑克结算的策略反馈”结合在一起，形成高密度短局循环。
 
 English summary: A 2D side-scrolling physics dash prototype built with Godot 4.6 and C#, featuring drag-to-boost movement, enemy collision kills, poker-hand settlement, and boss phase resets.
