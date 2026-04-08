@@ -8,8 +8,8 @@ English summary: A 2D side-scrolling physics dash prototype built with Godot 4.6
 
 ## 演示
 
-- Demo GIF: `./assets/demo.gif`（占位，后续替换）
-- Gameplay Screenshots: `./assets/screenshots/`（占位，后续补充）
+- Demo
+  <video src="vedio/demo.mp4" controls width="720"></video>
 
 ## 核心特性
 
